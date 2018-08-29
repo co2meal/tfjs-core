@@ -1477,14 +1477,6 @@ jasmine_util_1.describeWithFlags('greater', test_util_1.ALL_ENVS, function () {
         expect(res.dtype).toBe('bool');
         test_util_1.expectArraysClose(res, [0, 1, 0]);
     });
-    it('works with 0 sized tensors', function () {
-        var a = tf.tensor2d([], [0, 5]);
-        var b = tf.tensor1d([1, 2, 3, 4, 5]);
-        var res = tf.greater(a, b);
-        expect(res.dtype).toBe('bool');
-        expect(res.shape).toEqual([0, 5]);
-        test_util_1.expectArraysClose(res, []);
-    });
 });
 jasmine_util_1.describeWithFlags('greaterStrict', test_util_1.ALL_ENVS, function () {
     it('Tensor1D - strict version throws when a and b are different shape', function () {

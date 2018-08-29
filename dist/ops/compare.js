@@ -2,85 +2,84 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
 var tensor_util_1 = require("../tensor_util");
-var tensor_util_env_1 = require("../tensor_util_env");
 var util_1 = require("../util");
 var broadcast_util_1 = require("./broadcast_util");
 var operation_1 = require("./operation");
 function notEqual_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'notEqual');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'notEqual');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'notEqual');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'notEqual');
     tensor_util_1.assertTypesMatch($a, $b);
     broadcast_util_1.assertAndGetBroadcastShape($a.shape, $b.shape);
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.notEqual($a, $b); }, { $a: $a, $b: $b });
 }
 function notEqualStrict_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'notEqualStrict');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'notEqualStrict');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'notEqualStrict');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'notEqualStrict');
     util_1.assertShapesMatch($a.shape, $b.shape, 'Error in notEqualStrict: ');
     return $a.notEqual($b);
 }
 function less_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'less');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'less');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'less');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'less');
     tensor_util_1.assertTypesMatch($a, $b);
     broadcast_util_1.assertAndGetBroadcastShape($a.shape, $b.shape);
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.less($a, $b); }, { $a: $a, $b: $b });
 }
 function lessStrict_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'lessStrict');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'lessStrict');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'lessStrict');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'lessStrict');
     util_1.assertShapesMatch($a.shape, $b.shape, 'Error in lessStrict: ');
     return $a.less($b);
 }
 function equal_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'equal');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'equal');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'equal');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'equal');
     tensor_util_1.assertTypesMatch($a, $b);
     broadcast_util_1.assertAndGetBroadcastShape($a.shape, $b.shape);
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.equal($a, $b); }, { $a: $a, $b: $b });
 }
 function equalStrict_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'equalStrict');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'equalStrict');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'equalStrict');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'equalStrict');
     util_1.assertShapesMatch($a.shape, $b.shape, 'Error in equalStrict: ');
     return $a.equal($b);
 }
 function lessEqual_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'lessEqual');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'lessEqual');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'lessEqual');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'lessEqual');
     tensor_util_1.assertTypesMatch($a, $b);
     broadcast_util_1.assertAndGetBroadcastShape($a.shape, $b.shape);
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.lessEqual($a, $b); }, { $a: $a, $b: $b });
 }
 function lessEqualStrict_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'lessEqualStrict');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'lessEqualStrict');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'lessEqualStrict');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'lessEqualStrict');
     util_1.assertShapesMatch($a.shape, $b.shape, 'Error in lessEqualStrict: ');
     return $a.lessEqual($b);
 }
 function greater_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'greater');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'greater');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'greater');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'greater');
     tensor_util_1.assertTypesMatch($a, $b);
     broadcast_util_1.assertAndGetBroadcastShape($a.shape, $b.shape);
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.greater($a, $b); }, { $a: $a, $b: $b });
 }
 function greaterStrict_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'greaterStrict');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'greaterStrict');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'greaterStrict');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'greaterStrict');
     util_1.assertShapesMatch($a.shape, $b.shape, 'Error in greaterStrict: ');
     return $a.greater($b);
 }
 function greaterEqual_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'greaterEqual');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'greaterEqual');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'greaterEqual');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'greaterEqual');
     tensor_util_1.assertTypesMatch($a, $b);
     broadcast_util_1.assertAndGetBroadcastShape($a.shape, $b.shape);
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.greaterEqual($a, $b); }, { $a: $a, $b: $b });
 }
 function greaterEqualStrict_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'greaterEqualStrict');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'greaterEqualStrict');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'greaterEqualStrict');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'greaterEqualStrict');
     util_1.assertShapesMatch($a.shape, $b.shape, 'Error in greaterEqualStrict: ');
     return $a.greaterEqual($b);
 }

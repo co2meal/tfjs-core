@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var util_1 = require("./util");
 var Type;
 (function (Type) {
     Type[Type["NUMBER"] = 0] = "NUMBER";
@@ -12,9 +13,11 @@ exports.URL_PROPERTIES = [
     { name: 'WEBGL_DISJOINT_QUERY_TIMER_EXTENSION_RELIABLE', type: Type.BOOLEAN },
     { name: 'WEBGL_VERSION', type: Type.NUMBER },
     { name: 'WEBGL_RENDER_FLOAT32_ENABLED', type: Type.BOOLEAN },
-    { name: 'WEBGL_DOWNLOAD_FLOAT_ENABLED', type: Type.BOOLEAN },
-    { name: 'WEBGL_FENCE_API_ENABLED', type: Type.BOOLEAN },
-    { name: 'BACKEND', type: Type.STRING }, { name: 'EPSILON', type: Type.NUMBER }
+    { name: 'WEBGL_DOWNLOAD_FLOAT_ENABLED', type: Type.BOOLEAN }, {
+        name: 'WEBGL_GET_BUFFER_SUB_DATA_ASYNC_EXTENSION_ENABLED',
+        type: Type.BOOLEAN
+    },
+    { name: 'BACKEND', type: Type.STRING }
 ];
 function isWebGLVersionEnabled(webGLVersion, isBrowser) {
     var gl;
@@ -68,7 +71,8 @@ function isRenderToFloatTextureEnabled(webGLVersion, isBrowser) {
             return false;
         }
     }
-    var isFrameBufferComplete = createFloatTextureAndBindToFramebuffer(gl, webGLVersion);
+    createFloatTextureAndBindToFramebuffer(gl, webGLVersion);
+    var isFrameBufferComplete = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
     loseContext(gl);
     return isFrameBufferComplete;
 }
@@ -82,30 +86,32 @@ function isDownloadFloatTextureEnabled(webGLVersion, isBrowser) {
         if (!hasExtension(gl, 'OES_texture_float')) {
             return false;
         }
-        if (!hasExtension(gl, 'WEBGL_color_buffer_float')) {
-            return false;
-        }
     }
     else {
         if (!hasExtension(gl, 'EXT_color_buffer_float')) {
             return false;
         }
     }
-    var isFrameBufferComplete = createFloatTextureAndBindToFramebuffer(gl, webGLVersion);
+    createFloatTextureAndBindToFramebuffer(gl, webGLVersion);
+    gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.FLOAT, new Float32Array(4));
+    var readPixelsNoError = gl.getError() === gl.NO_ERROR;
     loseContext(gl);
-    return isFrameBufferComplete;
+    return readPixelsNoError;
 }
 exports.isDownloadFloatTextureEnabled = isDownloadFloatTextureEnabled;
-function isWebGLFenceEnabled(webGLVersion, isBrowser) {
+function isWebGLGetBufferSubDataAsyncExtensionEnabled(webGLVersion, isBrowser) {
+    if (webGLVersion > 0) {
+        return false;
+    }
     if (webGLVersion !== 2) {
         return false;
     }
     var gl = getWebGLRenderingContext(webGLVersion, isBrowser);
-    var isEnabled = gl.fenceSync != null;
+    var isEnabled = hasExtension(gl, 'WEBGL_get_buffer_sub_data_async');
     loseContext(gl);
     return isEnabled;
 }
-exports.isWebGLFenceEnabled = isWebGLFenceEnabled;
+exports.isWebGLGetBufferSubDataAsyncExtensionEnabled = isWebGLGetBufferSubDataAsyncExtensionEnabled;
 function isChrome() {
     return typeof navigator !== 'undefined' && navigator != null &&
         navigator.userAgent != null && /Chrome/.test(navigator.userAgent) &&
@@ -118,7 +124,7 @@ function getFeaturesFromURL() {
     if (typeof window === 'undefined' || typeof window.location === 'undefined') {
         return features;
     }
-    var urlParams = getQueryParams(window.location.search);
+    var urlParams = util_1.getQueryParams(window.location.search);
     if (TENSORFLOWJS_FLAGS_PREFIX in urlParams) {
         var urlFlags_1 = {};
         var keyValues = urlParams[TENSORFLOWJS_FLAGS_PREFIX].split(',');
@@ -180,27 +186,5 @@ function createFloatTextureAndBindToFramebuffer(gl, webGLVersion) {
     gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, 1, 1, 0, gl.RGBA, gl.FLOAT, null);
     gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
-    var isFrameBufferComplete = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.deleteTexture(texture);
-    gl.deleteFramebuffer(frameBuffer);
-    return isFrameBufferComplete;
-}
-function getQueryParams(queryString) {
-    var params = {};
-    queryString.replace(/[?&]([^=?&]+)(?:=([^&]*))?/g, function (s) {
-        var t = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            t[_i - 1] = arguments[_i];
-        }
-        decodeParam(params, t[0], t[1]);
-        return t.join('=');
-    });
-    return params;
-}
-exports.getQueryParams = getQueryParams;
-function decodeParam(params, name, value) {
-    params[decodeURIComponent(name)] = decodeURIComponent(value || '');
 }
 //# sourceMappingURL=environment_util.js.map

@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var binary_ops_1 = require("./binary_ops");
 var logical_ops_1 = require("./logical_ops");
 var operation_1 = require("./operation");
 var selu_util_1 = require("./selu_util");
 var tensor_ops_1 = require("./tensor_ops");
 function relu_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'relu');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'relu');
     if ($x.dtype === 'bool') {
         return $x.toInt();
     }
@@ -19,7 +19,7 @@ function relu_(x) {
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.relu($x); }, { $x: $x }, grad);
 }
 function elu_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'elu');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'elu');
     var grad = function (dy, saved) {
         var y = saved[0];
         return {
@@ -31,7 +31,7 @@ function elu_(x) {
     return environment_1.ENV.engine.runKernel(function (backend, save) { return save(backend.elu($x)); }, { $x: $x }, grad);
 }
 function selu_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'selu');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'selu');
     var grad = function (dy) {
         return {
             $x: function () {
@@ -48,12 +48,12 @@ function selu_(x) {
 }
 function leakyRelu_(x, alpha) {
     if (alpha === void 0) { alpha = 0.2; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'leakyRelu');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'leakyRelu');
     return binary_ops_1.maximum(tensor_ops_1.scalar(alpha).mul($x), $x);
 }
 function prelu_(x, alpha) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'prelu');
-    var $alpha = tensor_util_env_1.convertToTensor(alpha, 'alpha', 'prelu');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'prelu');
+    var $alpha = tensor_util_1.convertToTensor(alpha, 'alpha', 'prelu');
     var zero = tensor_ops_1.scalar(0);
     return binary_ops_1.maximum(zero, $x).add($alpha.mul(binary_ops_1.minimum(zero, $x)));
 }

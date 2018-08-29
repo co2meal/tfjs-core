@@ -1,7 +1,6 @@
 import { Tensor } from '../tensor';
 import { TensorLike } from '../types';
 declare function add_<T extends Tensor>(a: Tensor | TensorLike, b: Tensor | TensorLike): T;
-declare function addN_<T extends Tensor>(tensors: Array<T | TensorLike>): T;
 declare function addStrict_<T extends Tensor>(a: T, b: T): T;
 declare function sub_<T extends Tensor>(a: Tensor | TensorLike, b: Tensor | TensorLike): T;
 declare function subStrict_<T extends Tensor>(a: T, b: T): T;
@@ -22,7 +21,6 @@ declare function squaredDifference_<T extends Tensor>(a: Tensor | TensorLike, b:
 declare function squaredDifferenceStrict_<T extends Tensor>(a: T, b: T): T;
 declare function atan2_<T extends Tensor>(a: Tensor | TensorLike, b: Tensor | TensorLike): T;
 export declare const add: typeof add_;
-export declare const addN: typeof addN_;
 export declare const addStrict: typeof addStrict_;
 export declare const atan2: typeof atan2_;
 export declare const div: typeof div_;

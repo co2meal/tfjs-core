@@ -1,10 +1,4 @@
-/// <reference types="webgl2" />
-/// <reference types="webgl-ext" />
-import { WebGL1DisjointQueryTimerExtension, WebGL2DisjointQueryTimerExtension } from './webgl_types';
-export interface FenceContext {
-    query: WebGLQuery | WebGLSync;
-    isFencePassed(): boolean;
-}
+import { WebGL1DisjointQueryTimerExtension, WebGL2DisjointQueryTimerExtension, WebGLLoseContextExtension, WebGLQuery } from './webgl_types';
 export declare class GPGPUContext {
     gl: WebGLRenderingContext;
     textureFloatExtension: {};
@@ -12,7 +6,7 @@ export declare class GPGPUContext {
     colorBufferFloatExtension: {};
     colorBufferHalfFloatExtension: {};
     getBufferSubDataAsyncExtension: {};
-    loseContextExtension: WebGLLoseContext;
+    loseContextExtension: WebGLLoseContextExtension;
     disjointQueryTimerExtension: WebGL2DisjointQueryTimerExtension | WebGL1DisjointQueryTimerExtension;
     vertexBuffer: WebGLBuffer;
     indexBuffer: WebGLBuffer;
@@ -36,10 +30,7 @@ export declare class GPGPUContext {
     uploadMatrixToPackedTexture(texture: WebGLTexture, rows: number, columns: number, matrix: Float32Array): void;
     downloadFloat32MatrixFromOutputTexture(texture: WebGLTexture, rows: number, columns: number): Float32Array;
     downloadByteEncodedFloatMatrixFromOutputTexture(texture: WebGLTexture, rows: number, columns: number): Float32Array;
-    downloadFloat32MatrixFromBuffer(buffer: WebGLBuffer, rows: number, columns: number): Float32Array;
-    maybeCreateBufferFromTexture(texture: WebGLTexture, rows: number, columns: number): WebGLBuffer | WebGLTexture;
-    createAndWaitForFence(): Promise<void>;
-    private createFence;
+    downloadMatrixFromTextureAsync(texture: WebGLTexture, rows: number, columns: number): Promise<Float32Array>;
     downloadMatrixFromPackedTexture(texture: WebGLTexture, rows: number, columns: number): Float32Array;
     private vertexAttrsAreBound;
     createProgram(fragmentShaderSource: string): WebGLProgram;
@@ -59,18 +50,19 @@ export declare class GPGPUContext {
     private getQueryTimerExtension;
     private getQueryTimerExtensionWebGL2;
     private getQueryTimerExtensionWebGL1;
+    runQuery(queryFn: () => void): Promise<number>;
     beginQuery(): WebGLQuery;
     endQuery(): void;
-    waitForQueryAndGetTime(query: WebGLQuery): Promise<number>;
-    private getQueryTime;
     private isQueryAvailable;
-    pollFence(fenceContext: FenceContext): Promise<void>;
+    pollQueryTime(query: WebGLQuery): Promise<number>;
     private itemsToPoll;
     pollItems(): void;
     private addItemToPoll;
-    private bindTextureToFrameBuffer;
-    private unbindTextureToFrameBuffer;
+    private getQueryTime;
+    private downloadMatrixDriverSetup;
+    private downloadMatrixDriverTeardown;
     private downloadMatrixDriver;
+    private downloadMatrixDriverAsync;
     private setOutputMatrixTextureDriver;
     private setOutputMatrixWriteRegionDriver;
     private throwIfDisposed;

@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var conv_util = require("./conv_util");
 var operation_1 = require("./operation");
 function conv1d_(x, filter, stride, pad, dataFormat, dilation, dimRoundingMode) {
     if (dataFormat === void 0) { dataFormat = 'NWC'; }
     if (dilation === void 0) { dilation = 1; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'conv1d');
-    var $filter = tensor_util_env_1.convertToTensor(filter, 'filter', 'conv1d');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'conv1d');
+    var $filter = tensor_util_1.convertToTensor(filter, 'filter', 'conv1d');
     var x3D = $x;
     var reshapedTo3D = false;
     if ($x.rank === 2) {
@@ -42,8 +42,8 @@ function conv1d_(x, filter, stride, pad, dataFormat, dilation, dimRoundingMode) 
 function conv2d_(x, filter, strides, pad, dataFormat, dilations, dimRoundingMode) {
     if (dataFormat === void 0) { dataFormat = 'NHWC'; }
     if (dilations === void 0) { dilations = [1, 1]; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'conv2d');
-    var $filter = tensor_util_env_1.convertToTensor(filter, 'filter', 'conv2d');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'conv2d');
+    var $filter = tensor_util_1.convertToTensor(filter, 'filter', 'conv2d');
     var x4D = $x;
     var reshapedTo4D = false;
     if ($x.rank === 3) {
@@ -140,15 +140,15 @@ function conv2dDerFilter_(x, dy, filterShape, strides, pad, dimRoundingMode) {
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.conv2dDerFilter(x4D, dy4D, convInfo); }, { x4D: x4D, dy4D: dy4D });
 }
 function conv2dTranspose_(x, filter, outputShape, strides, pad, dimRoundingMode) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'conv2dTranspose');
-    var $filter = tensor_util_env_1.convertToTensor(filter, 'filter', 'conv2dTranspose');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'conv2dTranspose');
+    var $filter = tensor_util_1.convertToTensor(filter, 'filter', 'conv2dTranspose');
     return conv2dDerInput_(outputShape, $x, $filter, strides, pad, dimRoundingMode);
 }
 function depthwiseConv2d_(x, filter, strides, pad, dataFormat, dilations, dimRoundingMode) {
     if (dataFormat === void 0) { dataFormat = 'NHWC'; }
     if (dilations === void 0) { dilations = [1, 1]; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'depthwiseConv2d');
-    var $filter = tensor_util_env_1.convertToTensor(filter, 'filter', 'depthwiseConv2d');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'depthwiseConv2d');
+    var $filter = tensor_util_1.convertToTensor(filter, 'filter', 'depthwiseConv2d');
     var x4D = $x;
     var reshapedTo4D = false;
     if ($x.rank === 3) {
@@ -189,9 +189,9 @@ function depthwiseConv2d_(x, filter, strides, pad, dataFormat, dilations, dimRou
 function separableConv2d_(x, depthwiseFilter, pointwiseFilter, strides, pad, dilation, dataFormat) {
     if (dilation === void 0) { dilation = [1, 1]; }
     if (dataFormat === void 0) { dataFormat = 'NHWC'; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'separableConv2d');
-    var $depthwiseFilter = tensor_util_env_1.convertToTensor(depthwiseFilter, 'depthwiseFilter', 'separableConv2d');
-    var $pointwiseFilter = tensor_util_env_1.convertToTensor(pointwiseFilter, 'pointwiseFilter', 'separableConv2d');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'separableConv2d');
+    var $depthwiseFilter = tensor_util_1.convertToTensor(depthwiseFilter, 'depthwiseFilter', 'separableConv2d');
+    var $pointwiseFilter = tensor_util_1.convertToTensor(pointwiseFilter, 'pointwiseFilter', 'separableConv2d');
     var x4D = $x;
     var reshapedTo4D = false;
     if ($x.rank === 3) {

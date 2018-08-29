@@ -27,7 +27,7 @@ export interface TensorManager {
     };
 }
 export declare class Engine implements TensorManager {
-    backend: KernelBackend;
+    private backend;
     safeMode: boolean;
     private debugMode;
     registeredVariables: NamedVariableMap;

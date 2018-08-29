@@ -1,32 +1,32 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var operation_1 = require("./operation");
 var slice_util = require("./slice_util");
 function slice1d_(x, begin, size) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'slice1d');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'slice1d');
     util.assert($x.rank === 1, "slice1d expects a rank-1 tensor, but got a rank-" + $x.rank + " tensor");
     return exports.slice($x, [begin], [size]);
 }
 function slice2d_(x, begin, size) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'slice2d');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'slice2d');
     util.assert($x.rank === 2, "slice1d expects a rank-2 tensor, but got a rank-" + $x.rank + " tensor");
     return exports.slice($x, begin, size);
 }
 function slice3d_(x, begin, size) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'slice3d');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'slice3d');
     util.assert($x.rank === 3, "slice1d expects a rank-3 tensor, but got a rank-" + $x.rank + " tensor");
     return exports.slice($x, begin, size);
 }
 function slice4d_(x, begin, size) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'slice4d');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'slice4d');
     util.assert($x.rank === 4, "slice1d expects a rank-4 tensor, but got a rank-" + $x.rank + " tensor");
     return exports.slice($x, begin, size);
 }
 function slice_(x, begin, size) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'slice');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'slice');
     if ($x.rank === 0) {
         throw new Error('Slicing scalar is not possible');
     }

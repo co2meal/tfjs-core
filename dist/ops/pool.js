@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var conv_util = require("./conv_util");
 var operation_1 = require("./operation");
 function maxPool_(x, filterSize, strides, pad, dimRoundingMode) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'maxPool');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'maxPool');
     var x4D = $x;
     var reshapedTo4D = false;
     if ($x.rank === 3) {
@@ -34,7 +34,7 @@ function maxPool_(x, filterSize, strides, pad, dimRoundingMode) {
     return res;
 }
 function avgPool_(x, filterSize, strides, pad, dimRoundingMode) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'avgPool');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'avgPool');
     util.assert($x.dtype === 'float32', 'The input dtype to avgPool must be float32');
     var x4D = $x;
     var reshapedTo4D = false;
@@ -59,9 +59,9 @@ function avgPool_(x, filterSize, strides, pad, dimRoundingMode) {
     return res;
 }
 function maxPoolBackprop(dy, input, output, filterSize, strides, pad, dimRoundingMode) {
-    var $dy = tensor_util_env_1.convertToTensor(dy, 'dy', 'maxPoolBackprop');
-    var $input = tensor_util_env_1.convertToTensor(input, 'input', 'maxPoolBackprop');
-    var $output = tensor_util_env_1.convertToTensor(output, 'output', 'maxPoolBackprop');
+    var $dy = tensor_util_1.convertToTensor(dy, 'dy', 'maxPoolBackprop');
+    var $input = tensor_util_1.convertToTensor(input, 'input', 'maxPoolBackprop');
+    var $output = tensor_util_1.convertToTensor(output, 'output', 'maxPoolBackprop');
     util.assert($input.rank === $dy.rank, "Rank of input (" + $input.rank + ") does not match rank of dy (" + $dy.rank + ")");
     util.assert($dy.rank === 4, "Error in maxPoolBackprop: dy must be rank 4 but got rank " +
         ($dy.rank + "."));
@@ -76,8 +76,8 @@ function maxPoolBackprop(dy, input, output, filterSize, strides, pad, dimRoundin
     return res;
 }
 function avgPoolBackprop(dy, input, filterSize, strides, pad) {
-    var $dy = tensor_util_env_1.convertToTensor(dy, 'dy', 'avgPoolBackprop');
-    var $input = tensor_util_env_1.convertToTensor(input, 'input', 'avgPoolBackprop');
+    var $dy = tensor_util_1.convertToTensor(dy, 'dy', 'avgPoolBackprop');
+    var $input = tensor_util_1.convertToTensor(input, 'input', 'avgPoolBackprop');
     util.assert($input.rank === $dy.rank, "Rank of input (" + $input.rank + ") does not match rank of dy (" + $dy.rank + ")");
     var input4D = $input;
     var dy4D = $dy;

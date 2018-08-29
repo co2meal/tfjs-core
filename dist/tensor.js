@@ -146,8 +146,8 @@ var Tensor = (function () {
         this.isDisposedInternal = false;
         this.size = util.sizeFromShape(shape);
         if (values != null) {
-            util.assert(this.size === values.length, "Based on the provided shape, [" + shape + "], the tensor should have " +
-                (this.size + " values but has " + values.length));
+            util.assert(this.size === values.length, "Constructing tensor of shape (" + this.size + ") should match the " +
+                ("length of values (" + values.length + ")"));
         }
         this.shape = shape.slice();
         this.dtype = dtype || 'float32';
@@ -772,25 +772,13 @@ var Tensor = (function () {
         this.throwIfDisposed();
         return opHandler.spaceToBatchND(this, blockShape, paddings);
     };
-    Tensor.prototype.topk = function (k, sorted) {
-        if (k === void 0) { k = 1; }
-        if (sorted === void 0) { sorted = true; }
-        this.throwIfDisposed();
-        return opHandler.topk(this, k, sorted);
-    };
-    Tensor.prototype.stridedSlice = function (begin, end, strides, beginMask, endMask) {
-        if (beginMask === void 0) { beginMask = 0; }
-        if (endMask === void 0) { endMask = 0; }
-        this.throwIfDisposed();
-        return opHandler.stridedSlice(this, begin, end, strides, beginMask, endMask);
-    };
     Tensor.nextId = 0;
     return Tensor;
 }());
 exports.Tensor = Tensor;
 Object.defineProperty(Tensor, Symbol.hasInstance, {
     value: function (instance) {
-        return !!instance && instance.shape != null && instance.dtype != null;
+        return instance.shape != null && instance.dtype != null;
     }
 });
 var Variable = (function (_super) {

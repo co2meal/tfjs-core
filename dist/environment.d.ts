@@ -8,6 +8,7 @@ export declare class Environment {
     private globalEngine;
     private registry;
     backendName: string;
+    backend: KernelBackend;
     constructor(features?: Features);
     static setBackend(backendName: string, safeMode?: boolean): void;
     static getBackend(): string;
@@ -25,7 +26,6 @@ export declare class Environment {
     setFeatures(features: Features): void;
     reset(): void;
     private initBackend;
-    readonly backend: KernelBackend;
     findBackend(name: string): KernelBackend;
     registerBackend(name: string, factory: () => KernelBackend, priority?: number, setTensorTrackerFn?: (f: () => TensorTracker) => void): boolean;
     removeBackend(name: string): void;

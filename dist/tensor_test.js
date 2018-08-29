@@ -794,11 +794,6 @@ jasmine_util_1.describeWithFlags('tensor', test_util_1.ALL_ENVS, function () {
         expect(res.shape).toEqual([3]);
         test_util_1.expectArraysClose(res, [4, 2, 1]);
     });
-    it('squeeze a zero-sized tensor', function () {
-        var a = tf.tensor3d([], [0, 1, 0]);
-        var res = tf.squeeze(a);
-        expect(res.shape).toEqual([0, 0]);
-    });
     it('scalar -> 2d', function () {
         var a = tf.scalar(4, 'int32');
         var b = a.as2D(1, 1);
@@ -990,27 +985,6 @@ jasmine_util_1.describeWithFlags('tensor grad', test_util_1.ALL_ENVS, function (
     });
 });
 jasmine_util_1.describeWithFlags('tensor.data', test_util_1.ALL_ENVS, function () {
-    it('interleaving .data() and .dataSync()', function () { return __awaiter(_this, void 0, void 0, function () {
-        var a, b, ra, rb, _a, _b, _c;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
-                case 0:
-                    a = tf.tensor1d([1, 2, 3]);
-                    b = tf.tensor1d([4, 5, 6]);
-                    ra = a.square().data();
-                    rb = b.square().dataSync();
-                    test_util_1.expectArraysClose(a, [1, 2, 3]);
-                    test_util_1.expectArraysClose(b, [4, 5, 6]);
-                    test_util_1.expectArraysClose(Array.from(rb), [16, 25, 36]);
-                    _a = test_util_1.expectArraysClose;
-                    _c = (_b = Array).from;
-                    return [4, ra];
-                case 1:
-                    _a.apply(void 0, [_c.apply(_b, [_d.sent()]), [1, 4, 9]]);
-                    return [2];
-            }
-        });
-    }); });
     it('.data() postpones disposal of tensor', function (done) {
         expect(tf.memory().numTensors).toBe(0);
         tf.tidy(function () {
@@ -1053,64 +1027,6 @@ jasmine_util_1.describeWithFlags('x instanceof Tensor', test_util_1.ALL_ENVS, fu
     it('x: other object, fails', function () {
         var t = { something: 'else' };
         expect(t instanceof tensor_1.Tensor).toBe(false);
-    });
-    it('x: undefined or null, fails', function () {
-        expect(undefined instanceof tensor_1.Tensor).toBe(false);
-        expect(null instanceof tensor_1.Tensor).toBe(false);
-    });
-});
-jasmine_util_1.describeWithFlags('tensor with 0 in shape', test_util_1.ALL_ENVS, function () {
-    it('1d of shape [0]', function () {
-        var a = tf.tensor1d([]);
-        expect(a.dtype).toBe('float32');
-        expect(a.rank).toBe(1);
-        expect(a.shape).toEqual([0]);
-        test_util_1.expectArraysEqual(a, []);
-    });
-    it('1d throws when values are not empty', function () {
-        var values = new Float32Array([1, 2, 3]);
-        expect(function () { return tensor_1.Tensor.make([0], { values: values }); })
-            .toThrowError('Based on the provided shape, [0], the tensor should ' +
-            'have 0 values but has 3');
-    });
-    it('2d of shape [0, 5]', function () {
-        var a = tf.tensor2d([], [0, 5]);
-        expect(a.dtype).toBe('float32');
-        expect(a.rank).toBe(2);
-        expect(a.shape).toEqual([0, 5]);
-        test_util_1.expectArraysEqual(a, []);
-    });
-    it('2d throws when values are not empty', function () {
-        var values = [1, 2, 3, 4];
-        expect(function () { return tf.tensor2d(values, [0, 5]); })
-            .toThrowError('Based on the provided shape, [0,5], the tensor should ' +
-            'have 0 values but has 4');
-    });
-    it('3d of shape [0, 3, 0]', function () {
-        var a = tf.tensor3d([], [0, 3, 0]);
-        expect(a.dtype).toBe('float32');
-        expect(a.rank).toBe(3);
-        expect(a.shape).toEqual([0, 3, 0]);
-        test_util_1.expectArraysEqual(a, []);
-    });
-    it('3d throws when values are not empty', function () {
-        var values = [1, 2, 3];
-        expect(function () { return tf.tensor3d(values, [0, 3, 0]); })
-            .toThrowError('Based on the provided shape, [0,3,0], the tensor should ' +
-            'have 0 values but has 3');
-    });
-    it('4d of shape [1, 3, 0, 5]', function () {
-        var a = tf.tensor4d([], [1, 3, 0, 5]);
-        expect(a.dtype).toBe('float32');
-        expect(a.rank).toBe(4);
-        expect(a.shape).toEqual([1, 3, 0, 5]);
-        test_util_1.expectArraysEqual(a, []);
-    });
-    it('4d throws when values are not empty', function () {
-        var values = [1, 2, 3];
-        expect(function () { return tf.tensor4d(values, [1, 3, 0, 5]); })
-            .toThrowError('Based on the provided shape, [1,3,0,5], the tensor should ' +
-            'have 0 values but has 3');
     });
 });
 //# sourceMappingURL=tensor_test.js.map

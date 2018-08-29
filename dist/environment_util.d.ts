@@ -8,12 +8,11 @@ export interface Features {
     'HAS_WEBGL'?: boolean;
     'WEBGL_RENDER_FLOAT32_ENABLED'?: boolean;
     'WEBGL_DOWNLOAD_FLOAT_ENABLED'?: boolean;
-    'WEBGL_FENCE_API_ENABLED'?: boolean;
+    'WEBGL_GET_BUFFER_SUB_DATA_ASYNC_EXTENSION_ENABLED'?: boolean;
     'BACKEND'?: string;
     'TEST_EPSILON'?: number;
     'IS_CHROME'?: boolean;
     'IS_TEST'?: boolean;
-    'EPSILON'?: number;
 }
 export declare enum Type {
     NUMBER = 0,
@@ -29,9 +28,6 @@ export declare function isWebGLVersionEnabled(webGLVersion: 1 | 2, isBrowser: bo
 export declare function getWebGLDisjointQueryTimerVersion(webGLVersion: number, isBrowser: boolean): number;
 export declare function isRenderToFloatTextureEnabled(webGLVersion: number, isBrowser: boolean): boolean;
 export declare function isDownloadFloatTextureEnabled(webGLVersion: number, isBrowser: boolean): boolean;
-export declare function isWebGLFenceEnabled(webGLVersion: number, isBrowser: boolean): boolean;
+export declare function isWebGLGetBufferSubDataAsyncExtensionEnabled(webGLVersion: number, isBrowser: boolean): boolean;
 export declare function isChrome(): boolean;
 export declare function getFeaturesFromURL(): Features;
-export declare function getQueryParams(queryString: string): {
-    [key: string]: string;
-};

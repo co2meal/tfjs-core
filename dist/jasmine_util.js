@@ -27,8 +27,6 @@ function parseKarmaFlags(args) {
             name = type;
             if (type.toLowerCase() === 'cpu') {
                 backend = function () { return new backend_cpu_1.MathBackendCPU(); };
-                features = features || {};
-                features['HAS_WEBGL'] = false;
             }
             else if (type.toLowerCase() === 'webgl') {
                 backend = function () { return new backend_webgl_1.MathBackendWebGL(); };

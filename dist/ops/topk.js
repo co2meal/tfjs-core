@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var operation_1 = require("./operation");
 function topk_(x, k, sorted) {
     if (k === void 0) { k = 1; }
     if (sorted === void 0) { sorted = true; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'topk');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'topk');
     if ($x.rank === 0) {
         throw new Error('topk() expects the input to be of rank 1 or higher');
     }

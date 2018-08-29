@@ -92,20 +92,16 @@ var artifacts1 = {
 jasmine_util_1.describeWithFlags('Passthrough Saver', test_util_1.BROWSER_ENVS, function () {
     it('passes provided arguments through on save', function () { return __awaiter(_this, void 0, void 0, function () {
         function saveHandler(artifacts) {
-            return __awaiter(this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    savedArtifacts = artifacts;
-                    return [2, {
-                            modelArtifactsInfo: {
-                                dateSaved: testStartDate,
-                                modelTopologyType: 'JSON',
-                                modelTopologyBytes: JSON.stringify(modelTopology1).length,
-                                weightSpecsBytes: JSON.stringify(weightSpecs1).length,
-                                weightDataBytes: weightData1.byteLength,
-                            }
-                        }];
-                });
-            });
+            savedArtifacts = artifacts;
+            return {
+                modelArtifactsInfo: {
+                    dateSaved: testStartDate,
+                    modelTopologyType: 'JSON',
+                    modelTopologyBytes: JSON.stringify(modelTopology1).length,
+                    weightSpecsBytes: JSON.stringify(weightSpecs1).length,
+                    weightDataBytes: weightData1.byteLength,
+                }
+            };
         }
         var testStartDate, savedArtifacts, saveTrigger, saveResult, artifactsInfo;
         return __generator(this, function (_a) {

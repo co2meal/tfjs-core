@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var gradients_1 = require("../gradients");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var operation_1 = require("./operation");
 function softmax_(logits, dim) {
     if (dim === void 0) { dim = -1; }
-    var $logits = tensor_util_env_1.convertToTensor(logits, 'logits', 'softmax');
+    var $logits = tensor_util_1.convertToTensor(logits, 'logits', 'softmax');
     if (dim === -1) {
         dim = $logits.rank - 1;
     }

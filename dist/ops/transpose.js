@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var axis_util = require("./axis_util");
 var operation_1 = require("./operation");
 function transpose_(x, perm) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'transpose');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'transpose');
     if (perm == null) {
         perm = $x.shape.map(function (s, i) { return i; }).reverse();
     }

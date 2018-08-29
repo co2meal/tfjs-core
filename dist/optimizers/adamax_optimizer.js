@@ -15,6 +15,7 @@ var globals_1 = require("../globals");
 var ops_1 = require("../ops/ops");
 var serialization_1 = require("../serialization");
 var optimizer_1 = require("./optimizer");
+var optimizer_utils = require("./optimizer_utils");
 var AdamaxOptimizer = (function (_super) {
     __extends(AdamaxOptimizer, _super);
     function AdamaxOptimizer(learningRate, beta1, beta2, epsilon, decay) {
@@ -39,7 +40,7 @@ var AdamaxOptimizer = (function (_super) {
         _this.oneMinusBeta1 = globals_1.keep(ops_1.scalar(1 - beta1));
         _this.one = globals_1.keep(ops_1.scalar(1));
         if (epsilon === null) {
-            epsilon = environment_1.ENV.get('EPSILON');
+            epsilon = optimizer_utils.getOptimizerDefaultEpsilonValue();
         }
         _this.epsScalar = globals_1.keep(ops_1.scalar(epsilon));
         return _this;

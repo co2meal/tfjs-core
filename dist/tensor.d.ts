@@ -144,11 +144,6 @@ export interface OpHandler {
     unsortedSegmentSum<T extends Tensor>(x: T, segmentIds: Tensor1D, numSegments: number): T;
     batchToSpaceND<T extends Tensor>(x: T, blockShape: number[], crops: number[][]): T;
     spaceToBatchND<T extends Tensor>(x: T, blockShape: number[], paddings: number[][]): T;
-    topk<T extends Tensor>(x: T, k: number, sorted: boolean): {
-        values: T;
-        indices: T;
-    };
-    stridedSlice<T extends Tensor>(x: T, begin: number[], end: number[], strides: number[], beginMask: number, endMask: number): T;
 }
 export declare function setTensorTracker(fn: () => TensorTracker): void;
 export declare function setOpHandler(handler: OpHandler): void;
@@ -301,11 +296,6 @@ export declare class Tensor<R extends Rank = Rank> {
     unsortedSegmentSum<T extends Tensor>(this: T, segmentIds: Tensor1D, numSegments: number): T;
     batchToSpaceND<T extends Tensor>(this: T, blockShape: number[], crops: number[][]): T;
     spaceToBatchND<T extends Tensor>(this: T, blockShape: number[], paddings: number[][]): T;
-    topk<T extends Tensor>(this: T, k?: number, sorted?: boolean): {
-        values: T;
-        indices: T;
-    };
-    stridedSlice<T extends Tensor>(this: T, begin: number[], end: number[], strides: number[], beginMask?: number, endMask?: number): T;
 }
 export declare type Scalar = Tensor<Rank.R0>;
 export declare type Tensor1D = Tensor<Rank.R1>;

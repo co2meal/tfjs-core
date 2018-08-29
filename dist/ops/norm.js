@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var axis_util = require("./axis_util");
 var operation_1 = require("./operation");
 var tensor_ops_1 = require("./tensor_ops");
@@ -8,7 +8,7 @@ function norm_(x, ord, axis, keepDims) {
     if (ord === void 0) { ord = 'euclidean'; }
     if (axis === void 0) { axis = null; }
     if (keepDims === void 0) { keepDims = false; }
-    x = tensor_util_env_1.convertToTensor(x, 'x', 'norm');
+    x = tensor_util_1.convertToTensor(x, 'x', 'norm');
     var norm = normImpl(x, ord, axis);
     var keepDimsShape = norm.shape;
     if (keepDims) {

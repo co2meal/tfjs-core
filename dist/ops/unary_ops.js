@@ -1,47 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var operation_1 = require("./operation");
 var tensor_ops_1 = require("./tensor_ops");
 function neg_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'neg');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'neg');
     var grad = function (dy) {
         return { $x: function () { return dy.neg(); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.neg($x); }, { $x: $x }, grad);
 }
 function ceil_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'ceil');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'ceil');
     var grad = function (dy) {
         return { $x: function () { return tensor_ops_1.zerosLike(dy); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.ceil($x); }, { $x: $x }, grad);
 }
 function floor_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'floor');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'floor');
     var grad = function (dy) {
         return { $x: function () { return tensor_ops_1.zerosLike(dy); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.floor($x); }, { $x: $x }, grad);
 }
 function sign_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'sign');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'sign');
     var grad = function (dy) {
         return { $x: function () { return tensor_ops_1.zerosLike(dy); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.sign($x); }, { $x: $x }, grad);
 }
 function round_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'round');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'round');
     var grad = function (dy) {
         return { $x: function () { return tensor_ops_1.zerosLike(dy); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.round($x); }, { $x: $x }, grad);
 }
 function exp_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'exp');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'exp');
     var bck = function (dy, saved) {
         var y = saved[0];
         return { $x: function () { return dy.mulStrict(y); } };
@@ -49,63 +49,63 @@ function exp_(x) {
     return environment_1.ENV.engine.runKernel(function (backend, save) { return save(backend.exp($x)); }, { $x: $x }, bck);
 }
 function expm1_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'expm1');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'expm1');
     var grad = function (dy) {
         return { $x: function () { return dy.mulStrict($x.exp()); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.expm1($x); }, { $x: $x }, grad);
 }
 function log_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'log');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'log');
     var grad = function (dy) {
         return { $x: function () { return dy.divStrict($x.toFloat()); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.log($x); }, { $x: $x }, grad);
 }
 function log1p_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'log1p');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'log1p');
     var grad = function (dy) {
         return { $x: function () { return dy.divStrict($x.add(tensor_ops_1.scalar(1))); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.log1p($x); }, { $x: $x }, grad);
 }
 function sqrt_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'sqrt');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'sqrt');
     var grad = function (dy) {
         return { $x: function () { return dy.divStrict($x.toFloat().sqrt().mul(tensor_ops_1.scalar(2))); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.sqrt($x); }, { $x: $x }, grad);
 }
 function rsqrt_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'rsqrt');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'rsqrt');
     var grad = function (dy) {
         return { $x: function () { return dy.divStrict($x.pow(tensor_ops_1.scalar(1.5)).mul(tensor_ops_1.scalar(2))).neg(); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.rsqrt($x); }, { $x: $x }, grad);
 }
 function square_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'square');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'square');
     var grad = function (dy) {
         return { $x: function () { return dy.mulStrict($x.toFloat().mul(tensor_ops_1.scalar(2))); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.square($x); }, { $x: $x }, grad);
 }
 function reciprocal_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'reciprocal');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'reciprocal');
     var grad = function (dy) {
         return { $x: function () { return dy.divStrict($x.square().neg()); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.reciprocal($x); }, { $x: $x }, grad);
 }
 function abs_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'abs');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'abs');
     var grad = function (dy) {
         return { $x: function () { return dy.mulStrict($x.toFloat().step(-1)); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.abs($x); }, { $x: $x }, grad);
 }
 function clipByValue_(x, clipValueMin, clipValueMax) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'clipByValue');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'clipByValue');
     util.assert((clipValueMin <= clipValueMax), "Error in clip: min (" + clipValueMin + ") must be " +
         ("less than or equal to max (" + clipValueMax + ")."));
     var grad = function (dy) {
@@ -117,7 +117,7 @@ function clipByValue_(x, clipValueMin, clipValueMax) {
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.clip($x, clipValueMin, clipValueMax); }, { $x: $x }, grad);
 }
 function sigmoid_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'sigmoid');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'sigmoid');
     var grad = function (dy, saved) {
         var y = saved[0];
         return { $x: function () { return dy.mulStrict(y.mul(tensor_ops_1.scalar(1).sub(y))); } };
@@ -125,42 +125,42 @@ function sigmoid_(x) {
     return environment_1.ENV.engine.runKernel(function (backend, save) { return save(backend.sigmoid($x)); }, { $x: $x }, grad);
 }
 function logSigmoid_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'logSigmoid');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'logSigmoid');
     var grad = function (dy) {
         return { $x: function () { return dy.mulStrict($x.neg().sigmoid()); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.softplus($x.neg()).neg(); }, { $x: $x }, grad);
 }
 function softplus_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'softplus');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'softplus');
     var grad = function (dy) {
         return { $x: function () { return dy.mulStrict($x.sigmoid()); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.softplus($x); }, { $x: $x }, grad);
 }
 function sin_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'sin');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'sin');
     var grad = function (dy) {
         return { $x: function () { return $x.toFloat().cos().mulStrict(dy); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.sin($x); }, { $x: $x }, grad);
 }
 function cos_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'cos');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'cos');
     var grad = function (dy) {
         return { $x: function () { return $x.toFloat().sin().neg().mulStrict(dy); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.cos($x); }, { $x: $x }, grad);
 }
 function tan_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'tan');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'tan');
     var grad = function (dy) {
         return { $x: function () { return dy.divStrict($x.cos().square()); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.tan($x); }, { $x: $x }, grad);
 }
 function asin_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'asin');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'asin');
     var grad = function (dy) {
         return {
             $x: function () { return dy.divStrict(tensor_ops_1.scalar(1).sub($x.toFloat().square()).sqrt()); }
@@ -169,7 +169,7 @@ function asin_(x) {
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.asin($x); }, { $x: $x }, grad);
 }
 function acos_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'acos');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'acos');
     var grad = function (dy) {
         return {
             $x: function () {
@@ -180,28 +180,28 @@ function acos_(x) {
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.acos($x); }, { $x: $x }, grad);
 }
 function atan_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'atan');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'atan');
     var grad = function (dy) {
         return { $x: function () { return dy.divStrict(tensor_ops_1.scalar(1).add($x.toFloat().square())); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.atan($x); }, { $x: $x }, grad);
 }
 function sinh_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'sinh');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'sinh');
     var grad = function (dy) {
         return { $x: function () { return $x.toFloat().cosh().mulStrict(dy); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.sinh($x); }, { $x: $x }, grad);
 }
 function cosh_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'cosh');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'cosh');
     var grad = function (dy) {
         return { $x: function () { return $x.toFloat().sinh().mulStrict(dy); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.cosh($x); }, { $x: $x }, grad);
 }
 function tanh_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'tanh');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'tanh');
     var grad = function (dy, saved) {
         var y = saved[0];
         return { $x: function () { return tensor_ops_1.scalar(1).sub(y.square()).mulStrict(dy); } };
@@ -209,7 +209,7 @@ function tanh_(x) {
     return environment_1.ENV.engine.runKernel(function (backend, save) { return save(backend.tanh($x)); }, { $x: $x }, grad);
 }
 function asinh_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'asinh');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'asinh');
     var grad = function (dy) {
         return {
             $x: function () { return dy.divStrict(tensor_ops_1.scalar(1).add($x.toFloat().square()).sqrt()); }
@@ -218,7 +218,7 @@ function asinh_(x) {
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.asinh($x); }, { $x: $x }, grad);
 }
 function acosh_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'acosh');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'acosh');
     var grad = function (dy) {
         return {
             $x: function () { return dy.divStrict($x.toFloat().square().sub(tensor_ops_1.scalar(1)).sqrt()); }
@@ -227,14 +227,14 @@ function acosh_(x) {
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.acosh($x); }, { $x: $x }, grad);
 }
 function atanh_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'atanh');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'atanh');
     var grad = function (dy) {
         return { $x: function () { return dy.divStrict(tensor_ops_1.scalar(1).sub($x.toFloat().square())); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.atanh($x); }, { $x: $x }, grad);
 }
 function erf_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'erf');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'erf');
     util.assert($x.dtype === 'int32' || $x.dtype === 'float32', 'Input dtype must be `int32` or `float32`.');
     if ($x.dtype === 'int32') {
         $x = $x.toFloat();
@@ -248,7 +248,7 @@ function erf_(x) {
 }
 function step_(x, alpha) {
     if (alpha === void 0) { alpha = 0.0; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'step');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'step');
     var grad = function (dy) {
         return { $x: function () { return tensor_ops_1.zerosLike(dy); } };
     };

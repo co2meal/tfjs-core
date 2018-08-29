@@ -35,7 +35,7 @@ describe('concat_util.assertConcatShapesMatch rank=3D', function () {
 });
 describe('concat_util.computeConcatOutputShape', function () {
     it('compute output shape, axis=0', function () {
-        expect(concat_util.computeOutShape([[2, 2, 3], [1, 2, 3]], 0)).toEqual([
+        expect(concat_util.computeOutShape([2, 2, 3], [1, 2, 3], 0)).toEqual([
             3, 2, 3
         ]);
     });

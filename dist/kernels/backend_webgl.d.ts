@@ -1,10 +1,10 @@
 import { MemoryInfo, TimingInfo } from '../engine';
 import { Conv2DInfo } from '../ops/conv_util';
 import { DataId, Tensor, Tensor1D, Tensor2D, Tensor3D, Tensor4D } from '../tensor';
-import { DataType, Rank, ShapeMap, TypedArray } from '../types';
+import * as types from '../types';
+import { DataType, TypedArray } from '../types';
 import { KernelBackend } from './backend';
 import { GPGPUContext } from './webgl/gpgpu_context';
-import { GPGPUProgram } from './webgl/gpgpu_math';
 import { TextureManager } from './webgl/texture_manager';
 export interface CPUTimerQuery {
     startMs: number;
@@ -39,7 +39,6 @@ export declare class MathBackendWebGL implements KernelBackend {
     write(dataId: DataId, values: TypedArray): void;
     readSync(dataId: DataId): TypedArray;
     read(dataId: DataId): Promise<TypedArray>;
-    private getValuesFromTexture;
     time(f: () => void): Promise<WebGLTimingInfo>;
     memory(): WebGLMemoryInfo;
     private startTimer;
@@ -54,7 +53,7 @@ export declare class MathBackendWebGL implements KernelBackend {
     getGPGPUContext(): GPGPUContext;
     getCanvas(): HTMLCanvasElement;
     slice<T extends Tensor>(x: T, begin: number[], size: number[]): T;
-    stridedSlice<T extends Tensor>(x: T, begin: number[], end: number[], strides: number[], beginMask: number, endMask: number, ellipsisMask: number, newAxisMask: number, shrinkAxisMask: number): T;
+    stridedSlice<T extends Tensor>(x: T, begin: number[], end: number[], strides: number[], beginMask: number, endMask: number): T;
     reverse<T extends Tensor>(x: T, axis: number[]): T;
     concat(a: Tensor2D, b: Tensor2D): Tensor2D;
     neg<T extends Tensor>(x: T): T;
@@ -100,7 +99,6 @@ export declare class MathBackendWebGL implements KernelBackend {
     realDivide(a: Tensor, b: Tensor): Tensor;
     floorDiv(a: Tensor, b: Tensor): Tensor;
     add(a: Tensor, b: Tensor): Tensor;
-    addN<T extends Tensor>(tensors: T[]): T;
     subtract(a: Tensor, b: Tensor): Tensor;
     pow<T extends Tensor>(a: T, b: Tensor): T;
     ceil<T extends Tensor>(x: T): T;
@@ -149,8 +147,8 @@ export declare class MathBackendWebGL implements KernelBackend {
     avgPool(x: Tensor4D, convInfo: Conv2DInfo): Tensor4D;
     maxPoolBackprop(dy: Tensor4D, x: Tensor4D, y: Tensor4D, convInfo: Conv2DInfo): Tensor4D;
     avgPoolBackprop(dy: Tensor4D, x: Tensor4D, convInfo: Conv2DInfo): Tensor4D;
-    cast<T extends Tensor>(x: T, dtype: DataType): T;
-    reshape<R extends Rank>(x: Tensor, shape: ShapeMap[R]): Tensor<R>;
+    cast<T extends Tensor<types.Rank>>(x: T, dtype: DataType): T;
+    reshape<T extends Tensor<types.Rank>, R extends types.Rank>(x: T, shape: types.ShapeMap[R]): Tensor<R>;
     resizeBilinear(x: Tensor4D, newHeight: number, newWidth: number, alignCorners: boolean): Tensor4D;
     resizeBilinearBackprop(dy: Tensor4D, x: Tensor4D, alignCorners: boolean): Tensor4D;
     resizeNearestNeighbor(x: Tensor4D, newHeight: number, newWidth: number, alignCorners: boolean): Tensor4D;
@@ -159,12 +157,11 @@ export declare class MathBackendWebGL implements KernelBackend {
     oneHot(indices: Tensor1D, depth: number, onValue: number, offValue: number): Tensor2D;
     nonMaxSuppression(boxes: Tensor2D, scores: Tensor1D, maxOutputSize: number, iouThreshold: number, scoreThreshold: number): Tensor1D;
     private makeOutputArray;
-    compileAndRun<T extends Tensor, K extends Tensor>(program: GPGPUProgram, inputs: T[], output?: K, customSetup?: (gpgpu: GPGPUContext, webGLProgram: WebGLProgram) => void, pageToCpu?: boolean): K;
+    private compileAndRun;
     private getAndSaveBinary;
     getTextureManager(): TextureManager;
     private disposed;
     dispose(): void;
-    floatPrecision(): number;
     private throwIfNoData;
     private uploadToGPU;
     private cacheOnCPU;

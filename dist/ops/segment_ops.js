@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util_1 = require("../util");
 var array_ops_1 = require("./array_ops");
 var axis_util_1 = require("./axis_util");
@@ -11,8 +11,8 @@ var logical_ops_1 = require("./logical_ops");
 var operation_1 = require("./operation");
 var tensor_ops_1 = require("./tensor_ops");
 function unsortedSegmentSum_(x, segmentIds, numSegments) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'unsortedSegmentSum');
-    var $segmentIds = tensor_util_env_1.convertToTensor(segmentIds, 'segmentIds', 'unsortedSegmentSum', 'int32');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'unsortedSegmentSum');
+    var $segmentIds = tensor_util_1.convertToTensor(segmentIds, 'segmentIds', 'unsortedSegmentSum', 'int32');
     util_1.assert($segmentIds.dtype === 'int32', 'segmentIds must be of dtype `int32`');
     util_1.assert(util_1.isInt(numSegments), 'numSegments must be of dtype int');
     var gradFunc = function (dy) {
@@ -27,8 +27,8 @@ function unsortedSegmentSum_(x, segmentIds, numSegments) {
 }
 function gather_(x, indices, axis) {
     if (axis === void 0) { axis = 0; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'gather');
-    var $indices = tensor_util_env_1.convertToTensor(indices, 'indices', 'gather', 'int32');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'gather');
+    var $indices = tensor_util_1.convertToTensor(indices, 'indices', 'gather', 'int32');
     util_1.assert($indices.dtype === 'int32', 'Indices must be of dtype `int32`');
     axis = axis_util_1.parseAxisParam(axis, $x.shape)[0];
     var grad = function (dy) {

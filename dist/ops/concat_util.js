@@ -14,11 +14,10 @@ function assertParams(aShape, bShape, axis) {
     }
 }
 exports.assertParams = assertParams;
-function computeOutShape(shapes, axis) {
-    var outputShape = shapes[0].slice();
-    for (var i = 1; i < shapes.length; i++) {
-        outputShape[axis] += shapes[i][axis];
-    }
+function computeOutShape(x1Shape, x2Shape, axis) {
+    util.assert(x1Shape.length === x2Shape.length, 'x1 and x2 should have the same rank.');
+    var outputShape = x1Shape.slice();
+    outputShape[axis] += x2Shape[axis];
     return outputShape;
 }
 exports.computeOutShape = computeOutShape;

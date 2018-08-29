@@ -19,7 +19,7 @@ var Profiler = (function () {
         var results = Array.isArray(result) ? result : [result];
         results.forEach(function (r) {
             var vals = r.dataSync();
-            util.checkComputationForNaN(vals, r.dtype, name);
+            util.checkForNaN(vals, r.dtype, name);
             timer.then(function (timing) {
                 _this.logger.logKernelProfile(name, r, vals, timing.kernelMs);
             });

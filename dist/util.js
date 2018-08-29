@@ -186,22 +186,38 @@ function repeatedTry(checkFn, delayFn, maxCounter) {
     });
 }
 exports.repeatedTry = repeatedTry;
+function getQueryParams(queryString) {
+    var params = {};
+    queryString.replace(/[?&]([^=?&]+)(?:=([^&]*))?/g, function (s) {
+        var t = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            t[_i - 1] = arguments[_i];
+        }
+        decodeParam(params, t[0], t[1]);
+        return t.join('=');
+    });
+    return params;
+}
+exports.getQueryParams = getQueryParams;
+function decodeParam(params, name, value) {
+    params[decodeURIComponent(name)] = decodeURIComponent(value || '');
+}
 function inferFromImplicitShape(shape, size) {
     var shapeProd = 1;
     var implicitIdx = -1;
     for (var i = 0; i < shape.length; ++i) {
-        if (shape[i] >= 0) {
+        if (shape[i] > 0) {
             shapeProd *= shape[i];
         }
         else if (shape[i] === -1) {
             if (implicitIdx !== -1) {
                 throw Error("Shapes can only have 1 implicit size. " +
-                    ("Found -1 at dim " + implicitIdx + " and dim " + i));
+                    ("Found - 1 at dim " + implicitIdx + " and dim " + i));
             }
             implicitIdx = i;
         }
-        else if (shape[i] < 0) {
-            throw Error("Shapes can not be < 0. Found " + shape[i] + " at dim " + i);
+        else if (shape[i] <= 0) {
+            throw Error("Shapes can not be <= 0. Found " + shape[i] + " at dim " + i);
         }
     }
     if (implicitIdx === -1) {
@@ -209,10 +225,6 @@ function inferFromImplicitShape(shape, size) {
             throw Error("Size(" + size + ") must match the product of shape " + shape);
         }
         return shape;
-    }
-    if (shapeProd === 0) {
-        throw Error("Cannot infer the missing size in [" + shape + "] when " +
-            "there are 0 elements");
     }
     if (size % shapeProd !== 0) {
         throw Error("The implicit shape can't be a fractional number. " +
@@ -229,7 +241,7 @@ function squeezeShape(shape, axis) {
     var j = 0;
     for (var i = 0; i < shape.length; ++i) {
         if (axis != null) {
-            if (axis[j] === i && shape[i] !== 1) {
+            if (axis[j] === i && shape[i] > 1) {
                 throw new Error("Can't squeeze axis " + i + " since its dim '" + shape[i] + "' is not 1");
             }
             if ((axis[j] == null || axis[j] > i) && shape[i] === 1) {
@@ -240,7 +252,7 @@ function squeezeShape(shape, axis) {
                 j++;
             }
         }
-        if (shape[i] !== 1) {
+        if (shape[i] > 1) {
             newShape.push(shape[i]);
             keptDims.push(i);
         }
@@ -265,7 +277,7 @@ function getTypedArrayFromDType(dtype, size) {
     return values;
 }
 exports.getTypedArrayFromDType = getTypedArrayFromDType;
-function checkComputationForNaN(vals, dtype, name) {
+function checkForNaN(vals, dtype, name) {
     if (dtype !== 'float32') {
         return;
     }
@@ -275,18 +287,7 @@ function checkComputationForNaN(vals, dtype, name) {
         }
     }
 }
-exports.checkComputationForNaN = checkComputationForNaN;
-function checkConversionForNaN(vals, dtype) {
-    if (dtype === 'float32') {
-        return;
-    }
-    for (var i = 0; i < vals.length; i++) {
-        if (isNaN(vals[i])) {
-            throw Error("NaN is not a valid value for dtype: '" + dtype + "'.");
-        }
-    }
-}
-exports.checkConversionForNaN = checkConversionForNaN;
+exports.checkForNaN = checkForNaN;
 function hasEncodingLoss(oldType, newType) {
     if (newType === 'float32') {
         return false;
@@ -300,14 +301,11 @@ function hasEncodingLoss(oldType, newType) {
     return true;
 }
 exports.hasEncodingLoss = hasEncodingLoss;
-function copyTypedArray(array, dtype, debugMode) {
+function copyTypedArray(array, dtype) {
     if (dtype == null || dtype === 'float32') {
         return new Float32Array(array);
     }
     else if (dtype === 'int32') {
-        if (debugMode) {
-            checkConversionForNaN(array, dtype);
-        }
         return new Int32Array(array);
     }
     else if (dtype === 'bool') {
@@ -323,6 +321,7 @@ function copyTypedArray(array, dtype, debugMode) {
         throw new Error("Unknown data type " + dtype);
     }
 }
+exports.copyTypedArray = copyTypedArray;
 function isTypedArray(a) {
     return a instanceof Float32Array || a instanceof Int32Array ||
         a instanceof Uint8Array;
@@ -366,14 +365,14 @@ function computeStrides(shape) {
     return strides;
 }
 exports.computeStrides = computeStrides;
-function toTypedArray(a, dtype, debugMode) {
+function toTypedArray(a, dtype) {
     if (noConversionNeeded(a, dtype)) {
         return a;
     }
     if (Array.isArray(a)) {
         a = flatten(a);
     }
-    return copyTypedArray(a, dtype, debugMode);
+    return copyTypedArray(a, dtype);
 }
 exports.toTypedArray = toTypedArray;
 function noConversionNeeded(a, dtype) {

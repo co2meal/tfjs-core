@@ -724,7 +724,8 @@ jasmine_util_1.describeWithFlags('div', test_util_1.ALL_ENVS, function () {
         var b = tf.tensor1d([0.15, 0.2, 0.25, 0.5, 0.7, 1.2]);
         var result = tf.div(a, b);
         expect(result.shape).toEqual(a.shape);
-        test_util_1.expectArraysClose(result, [0, 5.0, -8.0, -8.0, 5.714285850524902, -3.3333332538604736]);
+        test_util_1.expectArraysClose(result, [0, 5.0, -8.0, -8.0,
+            5.714285850524902, -3.3333332538604736]);
     });
     it('floored internally', function () {
         var a = tf.tensor1d([10, 20, -20, -40], 'int32');

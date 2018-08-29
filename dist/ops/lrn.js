@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var operation_1 = require("./operation");
 function localResponseNormalization_(x, depthRadius, bias, alpha, beta) {
@@ -9,7 +9,7 @@ function localResponseNormalization_(x, depthRadius, bias, alpha, beta) {
     if (bias === void 0) { bias = 1; }
     if (alpha === void 0) { alpha = 1; }
     if (beta === void 0) { beta = 0.5; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'localResponseNormalization');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'localResponseNormalization');
     util.assert($x.rank === 4 || $x.rank === 3, "Error in localResponseNormalization: x must be rank 3 or 4 but got\n               rank " + $x.rank + ".");
     util.assert(util.isInt(depthRadius), "Error in localResponseNormalization: depthRadius must be an integer\n                     but got depthRadius " + depthRadius + ".");
     var x4D = $x;

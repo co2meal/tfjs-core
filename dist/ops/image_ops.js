@@ -37,12 +37,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
 var non_max_suppression_impl_1 = require("../kernels/non_max_suppression_impl");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var operation_1 = require("./operation");
 function resizeBilinear_(images, size, alignCorners) {
     if (alignCorners === void 0) { alignCorners = false; }
-    var $images = tensor_util_env_1.convertToTensor(images, 'images', 'resizeBilinear');
+    var $images = tensor_util_1.convertToTensor(images, 'images', 'resizeBilinear');
     util.assert($images.rank === 3 || $images.rank === 4, "Error in resizeBilinear: x must be rank 3 or 4, but got " +
         ("rank " + $images.rank + "."));
     util.assert(size.length === 2, "Error in resizeBilinear: new shape must 2D, but got shape " +
@@ -73,7 +73,7 @@ function resizeBilinear_(images, size, alignCorners) {
 }
 function resizeNearestNeighbor_(images, size, alignCorners) {
     if (alignCorners === void 0) { alignCorners = false; }
-    var $images = tensor_util_env_1.convertToTensor(images, 'images', 'resizeNearestNeighbor');
+    var $images = tensor_util_1.convertToTensor(images, 'images', 'resizeNearestNeighbor');
     util.assert($images.rank === 3 || $images.rank === 4, "Error in resizeNearestNeighbor: x must be rank 3 or 4, but got " +
         ("rank " + $images.rank + "."));
     util.assert(size.length === 2, "Error in resizeNearestNeighbor: new shape must 2D, but got shape " +
@@ -104,8 +104,8 @@ function resizeNearestNeighbor_(images, size, alignCorners) {
 function nonMaxSuppression_(boxes, scores, maxOutputSize, iouThreshold, scoreThreshold) {
     if (iouThreshold === void 0) { iouThreshold = 0.5; }
     if (scoreThreshold === void 0) { scoreThreshold = Number.NEGATIVE_INFINITY; }
-    var $boxes = tensor_util_env_1.convertToTensor(boxes, 'boxes', 'nonMaxSuppression');
-    var $scores = tensor_util_env_1.convertToTensor(scores, 'scores', 'nonMaxSuppression');
+    var $boxes = tensor_util_1.convertToTensor(boxes, 'boxes', 'nonMaxSuppression');
+    var $scores = tensor_util_1.convertToTensor(scores, 'scores', 'nonMaxSuppression');
     var inputs = nonMaxSuppSanityCheck($boxes, $scores, maxOutputSize, iouThreshold, scoreThreshold);
     maxOutputSize = inputs.maxOutputSize;
     iouThreshold = inputs.iouThreshold;
@@ -120,8 +120,8 @@ function nonMaxSuppressionAsync_(boxes, scores, maxOutputSize, iouThreshold, sco
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    $boxes = tensor_util_env_1.convertToTensor(boxes, 'boxes', 'nonMaxSuppressionAsync');
-                    $scores = tensor_util_env_1.convertToTensor(scores, 'scores', 'nonMaxSuppressionAsync');
+                    $boxes = tensor_util_1.convertToTensor(boxes, 'boxes', 'nonMaxSuppressionAsync');
+                    $scores = tensor_util_1.convertToTensor(scores, 'scores', 'nonMaxSuppressionAsync');
                     inputs = nonMaxSuppSanityCheck($boxes, $scores, maxOutputSize, iouThreshold, scoreThreshold);
                     maxOutputSize = inputs.maxOutputSize;
                     iouThreshold = inputs.iouThreshold;

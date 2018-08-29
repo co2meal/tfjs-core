@@ -5,10 +5,8 @@ var engine_1 = require("./engine");
 var environment_util_1 = require("./environment_util");
 var tensor_1 = require("./tensor");
 var tensor_util_1 = require("./tensor_util");
-var EPSILON_FLOAT16 = 1e-4;
-var TEST_EPSILON_FLOAT16 = 1e-1;
-var EPSILON_FLOAT32 = 1e-8;
-var TEST_EPSILON_FLOAT32 = 1e-3;
+var TEST_EPSILON_FLOAT32_ENABLED = 1e-3;
+var TEST_EPSILON_FLOAT32_DISABLED = 1e-1;
 var Environment = (function () {
     function Environment(features) {
         this.features = {};
@@ -105,9 +103,6 @@ var Environment = (function () {
             if (webGLVersion === 0) {
                 return 0;
             }
-            if (webGLVersion > 0) {
-                return 0;
-            }
             return environment_util_1.getWebGLDisjointQueryTimerVersion(webGLVersion, this.get('IS_BROWSER'));
         }
         else if (feature === 'WEBGL_DISJOINT_QUERY_TIMER_EXTENSION_RELIABLE') {
@@ -132,20 +127,14 @@ var Environment = (function () {
         else if (feature === 'WEBGL_DOWNLOAD_FLOAT_ENABLED') {
             return environment_util_1.isDownloadFloatTextureEnabled(this.get('WEBGL_VERSION'), this.get('IS_BROWSER'));
         }
-        else if (feature === 'WEBGL_FENCE_API_ENABLED') {
-            return environment_util_1.isWebGLFenceEnabled(this.get('WEBGL_VERSION'), this.get('IS_BROWSER'));
+        else if (feature === 'WEBGL_GET_BUFFER_SUB_DATA_ASYNC_EXTENSION_ENABLED') {
+            return environment_util_1.isWebGLGetBufferSubDataAsyncExtensionEnabled(this.get('WEBGL_VERSION'), this.get('IS_BROWSER'));
         }
         else if (feature === 'TEST_EPSILON') {
-            if (this.backend.floatPrecision() === 32) {
-                return TEST_EPSILON_FLOAT32;
+            if (this.get('WEBGL_RENDER_FLOAT32_ENABLED')) {
+                return TEST_EPSILON_FLOAT32_ENABLED;
             }
-            return TEST_EPSILON_FLOAT16;
-        }
-        else if (feature === 'EPSILON') {
-            if (this.backend.floatPrecision() === 16) {
-                return EPSILON_FLOAT32;
-            }
-            return EPSILON_FLOAT16;
+            return TEST_EPSILON_FLOAT32_DISABLED;
         }
         throw new Error("Unknown feature " + feature + ".");
     };
@@ -162,16 +151,10 @@ var Environment = (function () {
         var _this = this;
         if (safeMode === void 0) { safeMode = false; }
         this.backendName = backendName;
-        var backend = this.findBackend(backendName);
-        this.globalEngine = new engine_1.Engine(backend, safeMode, function () { return _this.get('DEBUG'); });
+        this.backend = this.findBackend(backendName);
+        this.globalEngine =
+            new engine_1.Engine(this.backend, safeMode, function () { return _this.get('DEBUG'); });
     };
-    Object.defineProperty(Environment.prototype, "backend", {
-        get: function () {
-            return this.engine.backend;
-        },
-        enumerable: true,
-        configurable: true
-    });
     Environment.prototype.findBackend = function (name) {
         if (!(name in this.registry)) {
             return null;

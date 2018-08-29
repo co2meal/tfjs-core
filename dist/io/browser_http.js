@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var environment_1 = require("../environment");
 var util_1 = require("../util");
 var io_utils_1 = require("./io_utils");
 var router_registry_1 = require("./router_registry");
@@ -42,15 +43,11 @@ var weights_loader_1 = require("./weights_loader");
 var BrowserHTTPRequest = (function () {
     function BrowserHTTPRequest(path, requestInit) {
         this.DEFAULT_METHOD = 'POST';
-        if (typeof fetch === 'undefined') {
-            throw new Error('browserHTTPRequest is not supported outside the web browser without a fetch polyfill.');
+        if (!environment_1.ENV.get('IS_BROWSER')) {
+            throw new Error('browserHTTPRequest is not supported outside the web browser.');
         }
         util_1.assert(path != null && path.length > 0, 'URL path for browserHTTPRequest must not be null, undefined or ' +
             'empty.');
-        if (Array.isArray(path)) {
-            util_1.assert(path.length === 2, 'URL paths for browserHTTPRequest must have a length of 2, ' +
-                ("(actual length is " + path.length + ")."));
-        }
         this.path = path;
         if (requestInit != null && requestInit.body != null) {
             throw new Error('requestInit is expected to have no pre-existing body, but has one.');
@@ -101,61 +98,7 @@ var BrowserHTTPRequest = (function () {
     };
     BrowserHTTPRequest.prototype.load = function () {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2, Array.isArray(this.path) ? this.loadBinaryModel() :
-                        this.loadJSONModel()];
-            });
-        });
-    };
-    BrowserHTTPRequest.prototype.loadBinaryTopology = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var response, error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 3, , 4]);
-                        return [4, fetch(this.path[0], this.requestInit)];
-                    case 1:
-                        response = _a.sent();
-                        return [4, response.arrayBuffer()];
-                    case 2: return [2, _a.sent()];
-                    case 3:
-                        error_1 = _a.sent();
-                        throw new Error(this.path[0] + " not found. " + error_1);
-                    case 4: return [2];
-                }
-            });
-        });
-    };
-    BrowserHTTPRequest.prototype.loadBinaryModel = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, graphPromise, manifestPromise, _b, modelTopology, weightsManifestResponse, weightsManifest, weightSpecs, weightData;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        graphPromise = this.loadBinaryTopology();
-                        return [4, fetch(this.path[1], this.requestInit)];
-                    case 1:
-                        manifestPromise = _c.sent();
-                        return [4, Promise.all([graphPromise, manifestPromise])];
-                    case 2:
-                        _b = _c.sent(), modelTopology = _b[0], weightsManifestResponse = _b[1];
-                        return [4, weightsManifestResponse.json()];
-                    case 3:
-                        weightsManifest = _c.sent();
-                        if (!(weightsManifest != null)) return [3, 5];
-                        return [4, this.loadWeights(weightsManifest)];
-                    case 4:
-                        _a = _c.sent(), weightSpecs = _a[0], weightData = _a[1];
-                        _c.label = 5;
-                    case 5: return [2, { modelTopology: modelTopology, weightSpecs: weightSpecs, weightData: weightData }];
-                }
-            });
-        });
-    };
-    BrowserHTTPRequest.prototype.loadJSONModel = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, modelConfigRequest, modelConfig, modelTopology, weightsManifest, weightSpecs, weightData, weightsManifest_1;
+            var modelConfigRequest, modelConfig, modelTopology, weightsManifest, weightSpecs, weightData, weightsManifest_2, _i, weightsManifest_1, entry, pathPrefix_1, fetchURLs_1, _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4, fetch(this.path, this.requestInit)];
@@ -171,72 +114,49 @@ var BrowserHTTPRequest = (function () {
                                 "topology or manifest for weights.");
                         }
                         if (!(weightsManifest != null)) return [3, 4];
-                        weightsManifest_1 = modelConfig['weightsManifest'];
-                        return [4, this.loadWeights(weightsManifest_1)];
+                        weightsManifest_2 = modelConfig['weightsManifest'];
+                        weightSpecs = [];
+                        for (_i = 0, weightsManifest_1 = weightsManifest_2; _i < weightsManifest_1.length; _i++) {
+                            entry = weightsManifest_1[_i];
+                            weightSpecs.push.apply(weightSpecs, entry.weights);
+                        }
+                        pathPrefix_1 = this.path.substring(0, this.path.lastIndexOf('/'));
+                        if (!pathPrefix_1.endsWith('/')) {
+                            pathPrefix_1 = pathPrefix_1 + '/';
+                        }
+                        fetchURLs_1 = [];
+                        weightsManifest_2.forEach(function (weightsGroup) {
+                            weightsGroup.paths.forEach(function (path) {
+                                fetchURLs_1.push(pathPrefix_1 + path);
+                            });
+                        });
+                        _a = io_utils_1.concatenateArrayBuffers;
+                        return [4, weights_loader_1.loadWeightsAsArrayBuffer(fetchURLs_1, this.requestInit)];
                     case 3:
-                        _a = _b.sent(), weightSpecs = _a[0], weightData = _a[1];
+                        weightData = _a.apply(void 0, [_b.sent()]);
                         _b.label = 4;
                     case 4: return [2, { modelTopology: modelTopology, weightSpecs: weightSpecs, weightData: weightData }];
                 }
             });
         });
     };
-    BrowserHTTPRequest.prototype.loadWeights = function (weightsManifest) {
-        return __awaiter(this, void 0, void 0, function () {
-            var weightPath, weightSpecs, _i, weightsManifest_2, entry, pathPrefix, fetchURLs, _a, _b;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        weightPath = Array.isArray(this.path) ? this.path[1] : this.path;
-                        weightSpecs = [];
-                        for (_i = 0, weightsManifest_2 = weightsManifest; _i < weightsManifest_2.length; _i++) {
-                            entry = weightsManifest_2[_i];
-                            weightSpecs.push.apply(weightSpecs, entry.weights);
-                        }
-                        pathPrefix = weightPath.substring(0, weightPath.lastIndexOf('/'));
-                        if (!pathPrefix.endsWith('/')) {
-                            pathPrefix = pathPrefix + '/';
-                        }
-                        fetchURLs = [];
-                        weightsManifest.forEach(function (weightsGroup) {
-                            weightsGroup.paths.forEach(function (path) {
-                                fetchURLs.push(pathPrefix + path);
-                            });
-                        });
-                        _a = [weightSpecs];
-                        _b = io_utils_1.concatenateArrayBuffers;
-                        return [4, weights_loader_1.loadWeightsAsArrayBuffer(fetchURLs, this.requestInit)];
-                    case 1: return [2, _a.concat([
-                            _b.apply(void 0, [_c.sent()])
-                        ])];
-                }
-            });
-        });
-    };
-    BrowserHTTPRequest.URL_SCHEME_REGEX = /^https?:\/\//;
+    BrowserHTTPRequest.URL_SCHEMES = ['http://', 'https://'];
     return BrowserHTTPRequest;
 }());
 exports.BrowserHTTPRequest = BrowserHTTPRequest;
-function isHTTPScheme(url) {
-    return url.match(BrowserHTTPRequest.URL_SCHEME_REGEX) != null;
-}
 exports.httpRequestRouter = function (url) {
-    if (typeof fetch === 'undefined') {
+    if (!environment_1.ENV.get('IS_BROWSER')) {
         return null;
     }
     else {
-        var isHTTP = true;
-        if (Array.isArray(url)) {
-            isHTTP = url.every(function (urlItem) { return isHTTPScheme(urlItem); });
+        for (var _i = 0, _a = BrowserHTTPRequest.URL_SCHEMES; _i < _a.length; _i++) {
+            var scheme = _a[_i];
+            if (url.startsWith(scheme)) {
+                return browserHTTPRequest(url);
+            }
         }
-        else {
-            isHTTP = isHTTPScheme(url);
-        }
-        if (isHTTP) {
-            return browserHTTPRequest(url);
-        }
+        return null;
     }
-    return null;
 };
 router_registry_1.IORouterRegistry.registerSaveRouter(exports.httpRequestRouter);
 router_registry_1.IORouterRegistry.registerLoadRouter(exports.httpRequestRouter);

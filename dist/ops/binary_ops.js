@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
 var tensor_util_1 = require("../tensor_util");
-var tensor_util_env_1 = require("../tensor_util_env");
 var types_1 = require("../types");
 var util = require("../util");
 var broadcast_util = require("./broadcast_util");
@@ -10,8 +9,8 @@ var operation_1 = require("./operation");
 var tensor_ops_1 = require("./tensor_ops");
 var unary_ops_1 = require("./unary_ops");
 function add_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'add');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'add');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'add');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'add');
     tensor_util_1.assertTypesMatch($a, $b);
     var outShape = broadcast_util.assertAndGetBroadcastShape($a.shape, $b.shape);
     var der = function (dy) {
@@ -35,39 +34,13 @@ function add_(a, b) {
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.add($a, $b); }, { $a: $a, $b: $b }, der);
 }
-function addN_(tensors) {
-    util.assert(Array.isArray(tensors), function () { return 'The param passed to tf.addN() must be a list of tensors'; });
-    util.assert(tensors.length >= 1, function () { return "Must pass at least one tensor to tf.addN(), but got " +
-        ("" + tensors.length); });
-    var $tensors = tensors.map(function (t, i) { return tensor_util_env_1.convertToTensor(t, "tensors" + i, 'addN'); });
-    var firstTensor = $tensors[0];
-    $tensors.forEach(function (t) {
-        if (t.dtype !== firstTensor.dtype) {
-            throw new Error('All tensors passed to tf.addN() must have the same dtype');
-        }
-    });
-    $tensors.forEach(function (t) {
-        if (!util.arraysEqual(t.shape, firstTensor.shape)) {
-            throw new Error('All tensors passed to tf.addN() must have the same shape');
-        }
-    });
-    var der = function (dy) {
-        var ders = {};
-        $tensors.forEach(function (t, i) {
-            ders[i] = function () { return dy.clone(); };
-        });
-        return ders;
-    };
-    var inputs = $tensors;
-    return environment_1.ENV.engine.runKernel(function (backend) { return backend.addN($tensors); }, inputs, der);
-}
 function addStrict_(a, b) {
     util.assertShapesMatch(a.shape, b.shape, 'Error in addStrict: ');
     return a.add(b);
 }
 function sub_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'sub');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'sub');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'sub');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'sub');
     tensor_util_1.assertTypesMatch($a, $b);
     var outShape = broadcast_util.assertAndGetBroadcastShape($a.shape, $b.shape);
     var der = function (dy) {
@@ -96,8 +69,8 @@ function subStrict_(a, b) {
     return a.sub(b);
 }
 function pow_(base, exp) {
-    var $base = tensor_util_env_1.convertToTensor(base, 'base', 'pow');
-    var $exp = tensor_util_env_1.convertToTensor(exp, 'exp', 'pow');
+    var $base = tensor_util_1.convertToTensor(base, 'base', 'pow');
+    var $exp = tensor_util_1.convertToTensor(exp, 'exp', 'pow');
     var outShape = broadcast_util.assertAndGetBroadcastShape($base.shape, $exp.shape);
     base = $base.cast(types_1.upcastType($base.dtype, $exp.dtype));
     exp = $exp.cast(types_1.upcastType($base.dtype, $exp.dtype));
@@ -128,8 +101,8 @@ function powStrict_(base, exp) {
     return base.pow(exp);
 }
 function mul_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'mul');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'mul');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'mul');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'mul');
     tensor_util_1.assertTypesMatch($a, $b);
     var outShape = broadcast_util.assertAndGetBroadcastShape($a.shape, $b.shape);
     var der = function (dy) {
@@ -158,8 +131,8 @@ function mulStrict_(a, b) {
     return a.mul(b);
 }
 function div_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'div');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'div');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'div');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'div');
     tensor_util_1.assertTypesMatch($a, $b);
     var forwardFunc;
     if ($a.dtype === 'int32' && $b.dtype === 'int32') {
@@ -192,8 +165,8 @@ function div_(a, b) {
     return environment_1.ENV.engine.runKernel(forwardFunc, { $a: $a, $b: $b }, der);
 }
 function floorDiv_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'floorDiv');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'floorDiv');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'floorDiv');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'floorDiv');
     tensor_util_1.assertTypesMatch($a, $b);
     var forwardFunc = function (backend) { return backend.floorDiv($a, $b); };
     var outShape = broadcast_util.assertAndGetBroadcastShape($a.shape, $b.shape);
@@ -224,8 +197,8 @@ function divStrict_(a, b) {
     return a.div(b);
 }
 function mod_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'mod');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'mod');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'mod');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'mod');
     tensor_util_1.assertTypesMatch($a, $b);
     var outShape = broadcast_util.assertAndGetBroadcastShape($a.shape, $b.shape);
     var der = function (dy) {
@@ -253,8 +226,8 @@ function modStrict_(a, b) {
     return a.mod(b);
 }
 function minimum_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'minimum');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'minimum');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'minimum');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'minimum');
     tensor_util_1.assertTypesMatch($a, $b);
     if ($a.dtype === 'bool') {
         $a = $a.toInt();
@@ -275,8 +248,8 @@ function minimumStrict_(a, b) {
     return a.minimum(b);
 }
 function maximum_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'maximum');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'maximum');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'maximum');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'maximum');
     tensor_util_1.assertTypesMatch($a, $b);
     if ($a.dtype === 'bool') {
         $a = $a.toInt();
@@ -297,8 +270,8 @@ function maximumStrict_(a, b) {
     return a.maximum(b);
 }
 function squaredDifference_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'squaredDifference');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'squaredDifference');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'squaredDifference');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'squaredDifference');
     tensor_util_1.assertTypesMatch($a, $b);
     broadcast_util.assertAndGetBroadcastShape($a.shape, $b.shape);
     var der = function (dy) {
@@ -314,8 +287,8 @@ function squaredDifferenceStrict_(a, b) {
     return a.squaredDifference(b);
 }
 function atan2_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'atan2');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'atan2');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'atan2');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'atan2');
     tensor_util_1.assertTypesMatch($a, $b);
     var outShape = broadcast_util.assertAndGetBroadcastShape($a.shape, $b.shape);
     var der = function (dy) {
@@ -342,7 +315,6 @@ function atan2_(a, b) {
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.atan2($a, $b); }, { $a: $a, $b: $b }, der);
 }
 exports.add = operation_1.op({ add_: add_ });
-exports.addN = operation_1.op({ addN_: addN_ });
 exports.addStrict = operation_1.op({ addStrict_: addStrict_ });
 exports.atan2 = operation_1.op({ atan2_: atan2_ });
 exports.div = operation_1.op({ div_: div_ });

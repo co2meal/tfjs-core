@@ -2434,18 +2434,6 @@ jasmine_util_1.describeWithFlags('expandDims', test_util_1.ALL_ENVS, function ()
         expect(res.shape).toEqual([1]);
         test_util_1.expectArraysClose(res, [7]);
     });
-    it('works with 0 in shape', function () {
-        var a = tf.tensor2d([], [0, 3]);
-        var res = a.expandDims();
-        expect(res.shape).toEqual([1, 0, 3]);
-        test_util_1.expectArraysClose(res, []);
-        var res2 = a.expandDims(1);
-        expect(res2.shape).toEqual([0, 1, 3]);
-        test_util_1.expectArraysClose(res2, []);
-        var res3 = a.expandDims(2);
-        expect(res3.shape).toEqual([0, 3, 1]);
-        test_util_1.expectArraysClose(res3, []);
-    });
 });
 jasmine_util_1.describeWithFlags('cumsum', test_util_1.ALL_ENVS, function () {
     it('1D standard', function () {
@@ -2529,7 +2517,7 @@ jasmine_util_1.describeWithFlags('batchToSpaceND', test_util_1.ALL_ENVS, functio
         expect(res.shape).toEqual([1, 2, 2, 3]);
         test_util_1.expectArraysClose(res, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     });
-    it('tensor4d, input shape=[4, 2, 2, 1], blockShape=[2, 2]', function () {
+    it('tensor4d, input shape=[1, 4, 4, 1], blockShape=[2, 2]', function () {
         var t = tf.tensor4d([1, 3, 9, 11, 2, 4, 10, 12, 5, 7, 13, 15, 6, 8, 14, 16], [4, 2, 2, 1]);
         var blockShape = [2, 2];
         var crops = [[0, 0], [0, 0]];
@@ -2609,26 +2597,6 @@ jasmine_util_1.describeWithFlags('batchToSpaceND', test_util_1.ALL_ENVS, functio
         expect(res.shape).toEqual([1, 2, 2, 1]);
         test_util_1.expectArraysClose(res, [1, 2, 3, 4]);
     });
-    it('gradients,  input shape=[4, 2, 2], block shape=[2]', function () {
-        var t = tf.tensor([-61, 37, -68, 72, 31, 62, 0, -13, 28, 54, 96, 44, -55, -64, -88, -94], [4, 2, 2]);
-        var blockShape = [2];
-        var crops = [[0, 2]];
-        var dy = tf.tensor([.01, .02, .03, .04, .05, .06, .07, .08], [2, 2, 2]);
-        var gradient = tf.grad(function (t) { return tf.batchToSpaceND(t, blockShape, crops); })(t, dy);
-        expect(gradient.shape).toEqual([4, 2, 2]);
-        test_util_1.expectArraysClose(gradient, [
-            0.01, 0.02, 0, 0, 0.05, 0.06, 0, 0, 0.03, 0.04, 0, 0, 0.07, 0.08, 0, 0
-        ]);
-    });
-    it('gradients, input shape=[4, 2, 2, 1], block shape=[2, 2]', function () {
-        var t = tf.tensor4d([1, 3, 9, 11, 2, 4, 10, 12, 5, 7, 13, 15, 6, 8, 14, 16], [4, 2, 2, 1]);
-        var blockShape = [2, 2];
-        var crops = [[0, 0], [0, 0]];
-        var dy = tf.tensor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], [1, 4, 4, 1]);
-        var gradient = tf.grad(function (t) { return tf.batchToSpaceND(t, blockShape, crops); })(t, dy);
-        expect(gradient.shape).toEqual([4, 2, 2, 1]);
-        test_util_1.expectArraysClose(gradient, [1, 3, 9, 11, 2, 4, 10, 12, 5, 7, 13, 15, 6, 8, 14, 16]);
-    });
 });
 jasmine_util_1.describeWithFlags('spaceToBatchND', test_util_1.ALL_ENVS, function () {
     it('tensor4d, input shape=[1, 2, 2, 1], blockShape=[2, 2]', function () {
@@ -2691,7 +2659,7 @@ jasmine_util_1.describeWithFlags('spaceToBatchND', test_util_1.ALL_ENVS, functio
             0, 5, 7, 0, 13, 15, 0, 6, 8, 0, 14, 16
         ]);
     });
-    it('tensor2d, blockShape [1]', function () {
+    it('tensor2d, blockShape [2]', function () {
         var t = tf.tensor2d([1, 3, 2, 4], [1, 4]);
         var blockShape = [2];
         var paddings = [[0, 0]];
@@ -2704,22 +2672,22 @@ jasmine_util_1.describeWithFlags('spaceToBatchND', test_util_1.ALL_ENVS, functio
         var blockShape = [2, 2, 2, 2];
         var paddings = [[0, 0], [0, 0], [0, 0], [0, 0]];
         expect(function () { return tf.spaceToBatchND(t, blockShape, paddings); })
-            .toThrowError('input rank should be > than [blockShape] but got 4');
+            .toThrowError('input rank 4 should be > than [blockShape] 4');
     });
     it('throws when paddings row dimension not equal to blockshape', function () {
         var t = tf.tensor4d([1, 2, 3, 4], [1, 2, 2, 1]);
         var blockShape = [2, 2];
         var paddings = [[0, 0]];
         expect(function () { return tf.spaceToBatchND(t, blockShape, paddings); })
-            .toThrowError('paddings.shape[0] must be equal to [blockShape], got 1');
+            .toThrowError('paddings.shape[0] 1 must be equal to [blockShape] 2');
     });
-    it('throws when input tensor spatial dimension not divisible by \
-  blockshapes', function () {
+    it('throws when input tensor spatial dimension not divisible by blockshapes', function () {
         var t = tf.tensor4d([1, 2, 3, 4, 5, 6], [1, 2, 3, 1]);
         var blockShape = [2, 2];
         var paddings = [[0, 0], [0, 0]];
         expect(function () { return tf.spaceToBatchND(t, blockShape, paddings); })
-            .toThrowError('input spatial dimensions must be divisible by blockShapes');
+            .toThrowError('input spatial dimensions 2,3,1 with paddings 0,0,0,0 must be '
+            + 'divisible by blockShapes 2,2');
     });
     it('accepts a tensor-like object', function () {
         var t = [[[[1], [2]], [[3], [4]]]];
@@ -2770,33 +2738,6 @@ jasmine_util_1.describeWithFlags('batchToSpaceND X spaceToBatchND', test_util_1.
             37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54,
             55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72
         ]);
-    });
-    it('gradients,  input shape=[4, 2, 2], block shape=[2]', function () {
-        var t = tf.tensor([-61, 37, -68, 72, 31, 62, 0, -13, 28, 54, 96, 44, -55, -64, -88, -94], [4, 2, 2]);
-        var blockShape = [2];
-        var paddings = [[0, 2]];
-        var dy = tf.tensor([
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-            17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
-        ], [8, 2, 2]);
-        var gradient = tf.grad(function (t) { return tf.spaceToBatchND(t, blockShape, paddings); })(t, dy);
-        expect(gradient.shape).toEqual([4, 2, 2]);
-        test_util_1.expectArraysClose(gradient, [1, 2, 17, 18, 5, 6, 21, 22, 9, 10, 25, 26, 13, 14, 29, 30]);
-    });
-    it('gradients, input shape=[2, 2, 4, 1], block shape=[2, 2]', function () {
-        var t = tf.tensor4d([
-            [[[1], [2], [3], [4]], [[5], [6], [7], [8]]],
-            [[[9], [10], [11], [12]], [[13], [14], [15], [16]]]
-        ], [2, 2, 4, 1]);
-        var blockShape = [2, 2];
-        var paddings = [[0, 0], [2, 0]];
-        var dy = tf.tensor([
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24
-        ], [8, 1, 3, 1]);
-        var gradient = tf.grad(function (t) { return tf.spaceToBatchND(t, blockShape, paddings); })(t, dy);
-        expect(gradient.shape).toEqual([2, 2, 4, 1]);
-        test_util_1.expectArraysClose(gradient, [2, 8, 3, 9, 14, 20, 15, 21, 5, 11, 6, 12, 17, 23, 18, 24]);
     });
 });
 //# sourceMappingURL=array_ops_test.js.map

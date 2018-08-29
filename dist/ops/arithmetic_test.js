@@ -684,13 +684,6 @@ jasmine_util_1.describeWithFlags('add', test_util_1.ALL_ENVS, function () {
         ];
         test_util_1.expectArraysClose(res, expectedResult);
     });
-    it('add tensors with 0 in shape', function () {
-        var a = tf.tensor1d([1]);
-        var b = tf.tensor3d([], [0, 0, 5]);
-        var res = tf.add(a, b);
-        expect(res.shape).toEqual([0, 0, 5]);
-        test_util_1.expectArraysEqual(res, []);
-    });
     it('gradient: scalar + 1D broadcast', function () {
         var a = tf.scalar(2);
         var b = tf.tensor1d([3, 4, 5]);
@@ -728,59 +721,6 @@ jasmine_util_1.describeWithFlags('add', test_util_1.ALL_ENVS, function () {
     it('accepts a tensor-like object', function () {
         var result = tf.add(5, [1, 2, 3]);
         test_util_1.expectArraysClose(result, [6, 7, 8]);
-    });
-});
-jasmine_util_1.describeWithFlags('addN', test_util_1.ALL_ENVS, function () {
-    it('a single tensor', function () {
-        var res = tf.addN([tf.tensor1d([1, 2, 3])]);
-        test_util_1.expectArraysClose(res, [1, 2, 3]);
-    });
-    it('two tensors, int32', function () {
-        var res = tf.addN([
-            tf.tensor1d([1, 2, -1], 'int32'),
-            tf.tensor1d([5, 3, 2], 'int32'),
-        ]);
-        test_util_1.expectArraysClose(res, [6, 5, 1]);
-        expect(res.dtype).toBe('int32');
-        expect(res.shape).toEqual([3]);
-    });
-    it('three tensors', function () {
-        var res = tf.addN([
-            tf.tensor1d([1, 2]),
-            tf.tensor1d([5, 3]),
-            tf.tensor1d([-5, -2]),
-        ]);
-        test_util_1.expectArraysClose(res, [1, 3]);
-        expect(res.dtype).toBe('float32');
-        expect(res.shape).toEqual([2]);
-    });
-    it('accepts a tensor-like object', function () {
-        var res = tf.addN([[1, 2], [3, 4]]);
-        test_util_1.expectArraysClose(res, [4, 6]);
-        expect(res.dtype).toBe('float32');
-        expect(res.shape).toEqual([2]);
-    });
-    it('list of numbers gets treated as a list of scalars', function () {
-        var res = tf.addN([1, 2, 3, 4]);
-        test_util_1.expectArraysClose(res, [10]);
-        expect(res.dtype).toBe('float32');
-        expect(res.shape).toEqual([]);
-    });
-    it('errors if list is empty', function () {
-        expect(function () { return tf.addN([]); })
-            .toThrowError(/Must pass at least one tensor to tf.addN\(\), but got 0/);
-    });
-    it('errors if argument is not an array', function () {
-        expect(function () { return tf.addN(tf.scalar(3)); })
-            .toThrowError(/The param passed to tf.addN\(\) must be a list of tensors/);
-    });
-    it('errors if arguments not of same dtype', function () {
-        expect(function () { return tf.addN([tf.scalar(1, 'int32'), tf.scalar(2, 'float32')]); })
-            .toThrowError(/All tensors passed to tf.addN\(\) must have the same dtype/);
-    });
-    it('errors if arguments not of same shape', function () {
-        expect(function () { return tf.addN([tf.scalar(1), tf.tensor1d([2])]); })
-            .toThrowError(/All tensors passed to tf.addN\(\) must have the same shape/);
     });
 });
 jasmine_util_1.describeWithFlags('sub', test_util_1.ALL_ENVS, function () {

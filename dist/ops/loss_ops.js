@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var globals_1 = require("../globals");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util_1 = require("../util");
 var axis_util_1 = require("./axis_util");
 var binary_ops_1 = require("./binary_ops");
@@ -16,10 +16,10 @@ var Reduction;
 })(Reduction = exports.Reduction || (exports.Reduction = {}));
 function computeWeightedLoss_(losses, weights, reduction) {
     if (reduction === void 0) { reduction = Reduction.SUM_BY_NONZERO_WEIGHTS; }
-    var $losses = tensor_util_env_1.convertToTensor(losses, 'losses', 'computeWeightedLoss');
+    var $losses = tensor_util_1.convertToTensor(losses, 'losses', 'computeWeightedLoss');
     var $weights = null;
     if (weights != null) {
-        $weights = tensor_util_env_1.convertToTensor(weights, 'weights', 'computeWeightedLoss');
+        $weights = tensor_util_1.convertToTensor(weights, 'weights', 'computeWeightedLoss');
     }
     var weightedLoss = ($weights == null) ? $losses : $losses.mul($weights);
     if (reduction === Reduction.NONE) {
@@ -53,11 +53,11 @@ function computeWeightedLoss_(losses, weights, reduction) {
 }
 function absoluteDifference_(labels, predictions, weights, reduction) {
     if (reduction === void 0) { reduction = Reduction.SUM_BY_NONZERO_WEIGHTS; }
-    var $labels = tensor_util_env_1.convertToTensor(labels, 'labels', 'absoluteDifference');
-    var $predictions = tensor_util_env_1.convertToTensor(predictions, 'predictions', 'absoluteDifference');
+    var $labels = tensor_util_1.convertToTensor(labels, 'labels', 'absoluteDifference');
+    var $predictions = tensor_util_1.convertToTensor(predictions, 'predictions', 'absoluteDifference');
     var $weights = null;
     if (weights != null) {
-        $weights = tensor_util_env_1.convertToTensor(weights, 'weights', 'absoluteDifference');
+        $weights = tensor_util_1.convertToTensor(weights, 'weights', 'absoluteDifference');
     }
     util_1.assertShapesMatch($labels.shape, $predictions.shape, 'Error in absoluteDifference: ');
     var losses = $labels.sub($predictions).abs();
@@ -65,11 +65,11 @@ function absoluteDifference_(labels, predictions, weights, reduction) {
 }
 function meanSquaredError_(labels, predictions, weights, reduction) {
     if (reduction === void 0) { reduction = Reduction.SUM_BY_NONZERO_WEIGHTS; }
-    var $labels = tensor_util_env_1.convertToTensor(labels, 'labels', 'meanSquaredError');
-    var $predictions = tensor_util_env_1.convertToTensor(predictions, 'predictions', 'meanSquaredError');
+    var $labels = tensor_util_1.convertToTensor(labels, 'labels', 'meanSquaredError');
+    var $predictions = tensor_util_1.convertToTensor(predictions, 'predictions', 'meanSquaredError');
     var $weights = null;
     if (weights != null) {
-        $weights = tensor_util_env_1.convertToTensor(weights, 'weights', 'meanSquaredError');
+        $weights = tensor_util_1.convertToTensor(weights, 'weights', 'meanSquaredError');
     }
     util_1.assertShapesMatch($labels.shape, $predictions.shape, 'Error in meanSquaredError: ');
     var losses = $labels.squaredDifference($predictions);
@@ -77,11 +77,11 @@ function meanSquaredError_(labels, predictions, weights, reduction) {
 }
 function cosineDistance_(labels, predictions, axis, weights, reduction) {
     if (reduction === void 0) { reduction = Reduction.SUM_BY_NONZERO_WEIGHTS; }
-    var $labels = tensor_util_env_1.convertToTensor(labels, 'labels', 'cosineDistance');
-    var $predictions = tensor_util_env_1.convertToTensor(predictions, 'predictions', 'cosineDistance');
+    var $labels = tensor_util_1.convertToTensor(labels, 'labels', 'cosineDistance');
+    var $predictions = tensor_util_1.convertToTensor(predictions, 'predictions', 'cosineDistance');
     var $weights = null;
     if (weights != null) {
-        $weights = tensor_util_env_1.convertToTensor(weights, 'weights', 'cosineDistance');
+        $weights = tensor_util_1.convertToTensor(weights, 'weights', 'cosineDistance');
     }
     util_1.assertShapesMatch($labels.shape, $predictions.shape, 'Error in cosineDistance: ');
     var one = tensor_ops_1.scalar(1);
@@ -90,11 +90,11 @@ function cosineDistance_(labels, predictions, axis, weights, reduction) {
 }
 function hingeLoss_(labels, predictions, weights, reduction) {
     if (reduction === void 0) { reduction = Reduction.SUM_BY_NONZERO_WEIGHTS; }
-    var $labels = tensor_util_env_1.convertToTensor(labels, 'labels', 'hingeLoss');
-    var $predictions = tensor_util_env_1.convertToTensor(predictions, 'predictions', 'hingeLoss');
+    var $labels = tensor_util_1.convertToTensor(labels, 'labels', 'hingeLoss');
+    var $predictions = tensor_util_1.convertToTensor(predictions, 'predictions', 'hingeLoss');
     var $weights = null;
     if (weights != null) {
-        $weights = tensor_util_env_1.convertToTensor(weights, 'weights', 'hingeLoss');
+        $weights = tensor_util_1.convertToTensor(weights, 'weights', 'hingeLoss');
     }
     util_1.assertShapesMatch($labels.shape, $predictions.shape, 'Error in hingeLoss: ');
     var one = tensor_ops_1.scalar(1);
@@ -105,11 +105,11 @@ function hingeLoss_(labels, predictions, weights, reduction) {
 function logLoss_(labels, predictions, weights, epsilon, reduction) {
     if (epsilon === void 0) { epsilon = 1e-7; }
     if (reduction === void 0) { reduction = Reduction.SUM_BY_NONZERO_WEIGHTS; }
-    var $labels = tensor_util_env_1.convertToTensor(labels, 'labels', 'logLoss');
-    var $predictions = tensor_util_env_1.convertToTensor(predictions, 'predictions', 'logLoss');
+    var $labels = tensor_util_1.convertToTensor(labels, 'labels', 'logLoss');
+    var $predictions = tensor_util_1.convertToTensor(predictions, 'predictions', 'logLoss');
     var $weights = null;
     if (weights != null) {
-        $weights = tensor_util_env_1.convertToTensor(weights, 'weights', 'logLoss');
+        $weights = tensor_util_1.convertToTensor(weights, 'weights', 'logLoss');
     }
     util_1.assertShapesMatch($labels.shape, $predictions.shape, 'Error in logLoss: ');
     var one = tensor_ops_1.scalar(1);
@@ -120,8 +120,8 @@ function logLoss_(labels, predictions, weights, epsilon, reduction) {
     return exports.computeWeightedLoss(losses, $weights, reduction);
 }
 function sigmoidCrossEntropyWithLogits_(labels, logits) {
-    var $labels = tensor_util_env_1.convertToTensor(labels, 'labels', 'sigmoidCrossEntropyWithLogits');
-    var $logits = tensor_util_env_1.convertToTensor(logits, 'logits', 'sigmoidCrossEntropyWithLogits');
+    var $labels = tensor_util_1.convertToTensor(labels, 'labels', 'sigmoidCrossEntropyWithLogits');
+    var $logits = tensor_util_1.convertToTensor(logits, 'logits', 'sigmoidCrossEntropyWithLogits');
     util_1.assertShapesMatch($labels.shape, $logits.shape, 'Error in sigmoidCrossEntropyWithLogits: ');
     var maxOutput = $logits.relu();
     var outputXTarget = $logits.mul($labels);
@@ -131,11 +131,11 @@ function sigmoidCrossEntropyWithLogits_(labels, logits) {
 function sigmoidCrossEntropy_(multiClassLabels, logits, weights, labelSmoothing, reduction) {
     if (labelSmoothing === void 0) { labelSmoothing = 0; }
     if (reduction === void 0) { reduction = Reduction.SUM_BY_NONZERO_WEIGHTS; }
-    var $multiClassLabels = tensor_util_env_1.convertToTensor(multiClassLabels, 'multiClassLabels', 'sigmoidCrossEntropy');
-    var $logits = tensor_util_env_1.convertToTensor(logits, 'logits', 'sigmoidCrossEntropy');
+    var $multiClassLabels = tensor_util_1.convertToTensor(multiClassLabels, 'multiClassLabels', 'sigmoidCrossEntropy');
+    var $logits = tensor_util_1.convertToTensor(logits, 'logits', 'sigmoidCrossEntropy');
     var $weights = null;
     if (weights != null) {
-        $weights = tensor_util_env_1.convertToTensor(weights, 'weights', 'sigmoidCrossEntropy');
+        $weights = tensor_util_1.convertToTensor(weights, 'weights', 'sigmoidCrossEntropy');
     }
     util_1.assertShapesMatch($multiClassLabels.shape, $logits.shape, 'Error in sigmoidCrossEntropy: ');
     if (labelSmoothing > 0) {
@@ -151,11 +151,11 @@ function sigmoidCrossEntropy_(multiClassLabels, logits, weights, labelSmoothing,
 function huberLoss_(labels, predictions, weights, delta, reduction) {
     if (delta === void 0) { delta = 1.0; }
     if (reduction === void 0) { reduction = Reduction.SUM_BY_NONZERO_WEIGHTS; }
-    var $labels = tensor_util_env_1.convertToTensor(labels, 'labels', 'huberLoss');
-    var $predictions = tensor_util_env_1.convertToTensor(predictions, 'predictions', 'huberLoss');
+    var $labels = tensor_util_1.convertToTensor(labels, 'labels', 'huberLoss');
+    var $predictions = tensor_util_1.convertToTensor(predictions, 'predictions', 'huberLoss');
     var $weights = null;
     if (weights != null) {
-        $weights = tensor_util_env_1.convertToTensor(weights, 'weights', 'huberLoss');
+        $weights = tensor_util_1.convertToTensor(weights, 'weights', 'huberLoss');
     }
     util_1.assertShapesMatch($labels.shape, $predictions.shape, 'Error in huberLoss: ');
     var deltaScalar = tensor_ops_1.scalar(delta);
@@ -195,11 +195,11 @@ function softmaxCrossEntropyWithLogits_(labels, logits, dim) {
 function softmaxCrossEntropy_(onehotLabels, logits, weights, labelSmoothing, reduction) {
     if (labelSmoothing === void 0) { labelSmoothing = 0; }
     if (reduction === void 0) { reduction = Reduction.SUM_BY_NONZERO_WEIGHTS; }
-    var $onehotLabels = tensor_util_env_1.convertToTensor(onehotLabels, 'onehotLabels', 'softmaxCrossEntropy');
-    var $logits = tensor_util_env_1.convertToTensor(logits, 'logits', 'softmaxCrossEntropy');
+    var $onehotLabels = tensor_util_1.convertToTensor(onehotLabels, 'onehotLabels', 'softmaxCrossEntropy');
+    var $logits = tensor_util_1.convertToTensor(logits, 'logits', 'softmaxCrossEntropy');
     var $weights = null;
     if (weights != null) {
-        $weights = tensor_util_env_1.convertToTensor(weights, 'weights', 'softmaxCrossEntropy');
+        $weights = tensor_util_1.convertToTensor(weights, 'weights', 'softmaxCrossEntropy');
     }
     util_1.assertShapesMatch($onehotLabels.shape, $logits.shape, 'Error in softmaxCrossEntropy: ');
     if (labelSmoothing > 0) {

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
 var globals_1 = require("../globals");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var axis_util = require("./axis_util");
 var operation_1 = require("./operation");
@@ -10,7 +10,7 @@ var tensor_ops_1 = require("./tensor_ops");
 function logSumExp_(x, axis, keepDims) {
     if (axis === void 0) { axis = null; }
     if (keepDims === void 0) { keepDims = false; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'logSumExp');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'logSumExp');
     var axes = axis_util.parseAxisParam(axis, $x.shape);
     var xMax = $x.max(axes, true);
     var a = $x.sub(xMax);
@@ -27,7 +27,7 @@ function logSumExp_(x, axis, keepDims) {
 function sum_(x, axis, keepDims) {
     if (axis === void 0) { axis = null; }
     if (keepDims === void 0) { keepDims = false; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'sum');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'sum');
     if ($x.dtype === 'bool') {
         $x = $x.toInt();
     }
@@ -61,7 +61,7 @@ function sum_(x, axis, keepDims) {
 function mean_(x, axis, keepDims) {
     if (axis === void 0) { axis = null; }
     if (keepDims === void 0) { keepDims = false; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'mean');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'mean');
     var axes = axis_util.parseAxisParam(axis, $x.shape);
     var shapes = axis_util.computeOutAndReduceShapes($x.shape, axes);
     var reduceShape = shapes[1];
@@ -87,7 +87,7 @@ function mean_(x, axis, keepDims) {
 function min_(x, axis, keepDims) {
     if (axis === void 0) { axis = null; }
     if (keepDims === void 0) { keepDims = false; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'min');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'min');
     var origAxes = axis_util.parseAxisParam(axis, $x.shape);
     var axes = origAxes;
     var permutedAxes = axis_util.getAxesPermutation(axes, $x.rank);
@@ -105,7 +105,7 @@ function min_(x, axis, keepDims) {
 function max_(x, axis, keepDims) {
     if (axis === void 0) { axis = null; }
     if (keepDims === void 0) { keepDims = false; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'max');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'max');
     var origAxes = axis_util.parseAxisParam(axis, $x.shape);
     var axes = origAxes;
     var permutedAxes = axis_util.getAxesPermutation(axes, $x.rank);
@@ -122,7 +122,7 @@ function max_(x, axis, keepDims) {
 }
 function argMin_(x, axis) {
     if (axis === void 0) { axis = 0; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'argMin');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'argMin');
     if (axis == null) {
         axis = 0;
     }
@@ -136,7 +136,7 @@ function argMin_(x, axis) {
 }
 function argMax_(x, axis) {
     if (axis === void 0) { axis = 0; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'argMax');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'argMax');
     if (axis == null) {
         axis = 0;
     }
@@ -151,7 +151,7 @@ function argMax_(x, axis) {
 function all_(x, axis, keepDims) {
     if (axis === void 0) { axis = null; }
     if (keepDims === void 0) { keepDims = false; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'all', 'bool');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'all', 'bool');
     util.assert($x.dtype === 'bool', "Error Tensor must be of type bool. Got: " + $x.dtype);
     var origAxes = axis_util.parseAxisParam(axis, $x.shape);
     var axes = origAxes;
@@ -170,7 +170,7 @@ function all_(x, axis, keepDims) {
 function any_(x, axis, keepDims) {
     if (axis === void 0) { axis = null; }
     if (keepDims === void 0) { keepDims = false; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'any', 'bool');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'any', 'bool');
     util.assert($x.dtype === 'bool', "Error Tensor must be of type bool. Got: " + $x.dtype);
     var origAxes = axis_util.parseAxisParam(axis, $x.shape);
     var axes = origAxes;
@@ -189,7 +189,7 @@ function any_(x, axis, keepDims) {
 function moments_(x, axis, keepDims) {
     if (axis === void 0) { axis = null; }
     if (keepDims === void 0) { keepDims = false; }
-    x = tensor_util_env_1.convertToTensor(x, 'x', 'moments');
+    x = tensor_util_1.convertToTensor(x, 'x', 'moments');
     var axes = axis_util.parseAxisParam(axis, x.shape);
     var mean = x.mean(axes, keepDims);
     var keepDimsShape = mean.shape;

@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var environment_1 = require("../environment");
 var tensor_1 = require("../tensor");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util_1 = require("../util");
 var operation_1 = require("./operation");
 function tensor(values, shape, dtype) {
@@ -22,9 +21,7 @@ function tensor(values, shape, dtype) {
         values = [values];
     }
     shape = shape || inferredShape;
-    return tensor_1.Tensor.make(shape, {
-        values: util_1.toTypedArray(values, dtype, environment_1.ENV.get('DEBUG'))
-    }, dtype);
+    return tensor_1.Tensor.make(shape, { values: util_1.toTypedArray(values, dtype) }, dtype);
 }
 exports.tensor = tensor;
 function scalar(value, dtype) {
@@ -158,11 +155,11 @@ function fill(shape, value, dtype) {
 }
 exports.fill = fill;
 function onesLike_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'onesLike');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'onesLike');
     return ones($x.shape, $x.dtype);
 }
 function zerosLike_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'zerosLike');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'zerosLike');
     return zeros($x.shape, $x.dtype);
 }
 function linspace(start, stop, num) {

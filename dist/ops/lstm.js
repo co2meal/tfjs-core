@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var operation_1 = require("./operation");
 function multiRNNCell_(lstmCells, data, c, h) {
-    var $data = tensor_util_env_1.convertToTensor(data, 'data', 'multiRNNCell');
-    var $c = tensor_util_env_1.convertToTensorArray(c, 'c', 'multiRNNCell');
-    var $h = tensor_util_env_1.convertToTensorArray(h, 'h', 'multiRNNCell');
+    var $data = tensor_util_1.convertToTensor(data, 'data', 'multiRNNCell');
+    var $c = tensor_util_1.convertToTensorArray(c, 'c', 'multiRNNCell');
+    var $h = tensor_util_1.convertToTensorArray(h, 'h', 'multiRNNCell');
     var input = $data;
     var newStates = [];
     for (var i = 0; i < lstmCells.length; i++) {
@@ -23,12 +23,12 @@ function multiRNNCell_(lstmCells, data, c, h) {
     return [newC, newH];
 }
 function basicLSTMCell_(forgetBias, lstmKernel, lstmBias, data, c, h) {
-    var $forgetBias = tensor_util_env_1.convertToTensor(forgetBias, 'forgetBias', 'basicLSTMCell');
-    var $lstmKernel = tensor_util_env_1.convertToTensor(lstmKernel, 'lstmKernel', 'basicLSTMCell');
-    var $lstmBias = tensor_util_env_1.convertToTensor(lstmBias, 'lstmBias', 'basicLSTMCell');
-    var $data = tensor_util_env_1.convertToTensor(data, 'data', 'basicLSTMCell');
-    var $c = tensor_util_env_1.convertToTensor(c, 'c', 'basicLSTMCell');
-    var $h = tensor_util_env_1.convertToTensor(h, 'h', 'basicLSTMCell');
+    var $forgetBias = tensor_util_1.convertToTensor(forgetBias, 'forgetBias', 'basicLSTMCell');
+    var $lstmKernel = tensor_util_1.convertToTensor(lstmKernel, 'lstmKernel', 'basicLSTMCell');
+    var $lstmBias = tensor_util_1.convertToTensor(lstmBias, 'lstmBias', 'basicLSTMCell');
+    var $data = tensor_util_1.convertToTensor(data, 'data', 'basicLSTMCell');
+    var $c = tensor_util_1.convertToTensor(c, 'c', 'basicLSTMCell');
+    var $h = tensor_util_1.convertToTensor(h, 'h', 'basicLSTMCell');
     var combined = $data.concat($h, 1);
     var weighted = combined.matMul($lstmKernel);
     var res = weighted.add($lstmBias);

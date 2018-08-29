@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var array_ops_1 = require("./array_ops");
 var broadcast_util_1 = require("./broadcast_util");
@@ -10,16 +10,16 @@ var tensor_ops_1 = require("./tensor_ops");
 var unary_ops_1 = require("./unary_ops");
 function batchNormalization2d_(x, mean, variance, varianceEpsilon, scale, offset) {
     if (varianceEpsilon === void 0) { varianceEpsilon = .001; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'batchNormalization');
-    var $mean = tensor_util_env_1.convertToTensor(mean, 'mean', 'batchNormalization');
-    var $variance = tensor_util_env_1.convertToTensor(variance, 'variance', 'batchNormalization');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'batchNormalization');
+    var $mean = tensor_util_1.convertToTensor(mean, 'mean', 'batchNormalization');
+    var $variance = tensor_util_1.convertToTensor(variance, 'variance', 'batchNormalization');
     var $scale;
     if (scale != null) {
-        $scale = tensor_util_env_1.convertToTensor(scale, 'scale', 'batchNormalization');
+        $scale = tensor_util_1.convertToTensor(scale, 'scale', 'batchNormalization');
     }
     var $offset;
     if (offset != null) {
-        $offset = tensor_util_env_1.convertToTensor(offset, 'offset', 'batchNormalization');
+        $offset = tensor_util_1.convertToTensor(offset, 'offset', 'batchNormalization');
     }
     util.assert($x.rank === 2, "Error in batchNormalization3D: x must be rank 3 but got rank " +
         ($x.rank + "."));
@@ -39,16 +39,16 @@ function batchNormalization2d_(x, mean, variance, varianceEpsilon, scale, offset
 }
 function batchNormalization3d_(x, mean, variance, varianceEpsilon, scale, offset) {
     if (varianceEpsilon === void 0) { varianceEpsilon = .001; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'batchNormalization');
-    var $mean = tensor_util_env_1.convertToTensor(mean, 'mean', 'batchNormalization');
-    var $variance = tensor_util_env_1.convertToTensor(variance, 'variance', 'batchNormalization');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'batchNormalization');
+    var $mean = tensor_util_1.convertToTensor(mean, 'mean', 'batchNormalization');
+    var $variance = tensor_util_1.convertToTensor(variance, 'variance', 'batchNormalization');
     var $scale;
     if (scale != null) {
-        $scale = tensor_util_env_1.convertToTensor(scale, 'scale', 'batchNormalization');
+        $scale = tensor_util_1.convertToTensor(scale, 'scale', 'batchNormalization');
     }
     var $offset;
     if (offset != null) {
-        $offset = tensor_util_env_1.convertToTensor(offset, 'offset', 'batchNormalization');
+        $offset = tensor_util_1.convertToTensor(offset, 'offset', 'batchNormalization');
     }
     util.assert($x.rank === 3, "Error in batchNormalization3D: x must be rank 3 but got rank " +
         ($x.rank + "."));
@@ -68,16 +68,16 @@ function batchNormalization3d_(x, mean, variance, varianceEpsilon, scale, offset
 }
 function batchNormalization4d_(x, mean, variance, varianceEpsilon, scale, offset) {
     if (varianceEpsilon === void 0) { varianceEpsilon = .001; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'batchNormalization');
-    var $mean = tensor_util_env_1.convertToTensor(mean, 'mean', 'batchNormalization');
-    var $variance = tensor_util_env_1.convertToTensor(variance, 'variance', 'batchNormalization');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'batchNormalization');
+    var $mean = tensor_util_1.convertToTensor(mean, 'mean', 'batchNormalization');
+    var $variance = tensor_util_1.convertToTensor(variance, 'variance', 'batchNormalization');
     var $scale;
     if (scale != null) {
-        $scale = tensor_util_env_1.convertToTensor(scale, 'scale', 'batchNormalization');
+        $scale = tensor_util_1.convertToTensor(scale, 'scale', 'batchNormalization');
     }
     var $offset;
     if (offset != null) {
-        $offset = tensor_util_env_1.convertToTensor(offset, 'offset', 'batchNormalization');
+        $offset = tensor_util_1.convertToTensor(offset, 'offset', 'batchNormalization');
     }
     util.assert($x.rank === 4, "Error in batchNormalization4D: x must be rank 4 but got rank " +
         ($x.rank + "."));
@@ -97,16 +97,16 @@ function batchNormalization4d_(x, mean, variance, varianceEpsilon, scale, offset
 }
 function batchNormalization_(x, mean, variance, varianceEpsilon, scale, offset) {
     if (varianceEpsilon === void 0) { varianceEpsilon = .001; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'batchNormalization');
-    var $mean = tensor_util_env_1.convertToTensor(mean, 'mean', 'batchNormalization');
-    var $variance = tensor_util_env_1.convertToTensor(variance, 'variance', 'batchNormalization');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'batchNormalization');
+    var $mean = tensor_util_1.convertToTensor(mean, 'mean', 'batchNormalization');
+    var $variance = tensor_util_1.convertToTensor(variance, 'variance', 'batchNormalization');
     var $scale;
     if (scale != null) {
-        $scale = tensor_util_env_1.convertToTensor(scale, 'scale', 'batchNormalization');
+        $scale = tensor_util_1.convertToTensor(scale, 'scale', 'batchNormalization');
     }
     var $offset;
     if (offset != null) {
-        $offset = tensor_util_env_1.convertToTensor(offset, 'offset', 'batchNormalization');
+        $offset = tensor_util_1.convertToTensor(offset, 'offset', 'batchNormalization');
     }
     util.assert($mean.rank === $variance.rank, 'Batch normalization gradient requires mean and variance to have ' +
         'equal ranks.');

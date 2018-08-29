@@ -37,41 +37,41 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
 var where_impl_1 = require("../kernels/where_impl");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util_1 = require("../util");
 var broadcast_util_1 = require("./broadcast_util");
 var operation_1 = require("./operation");
 var tensor_ops_1 = require("./tensor_ops");
 function logicalNot_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'logicalNot', 'bool');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'logicalNot', 'bool');
     util_1.assert($x.dtype === 'bool', 'Error Array must be of type bool.');
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.logicalNot($x); }, { $x: $x });
 }
 function logicalAnd_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'logicalAnd', 'bool');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'logicalAnd', 'bool');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'logicalAnd', 'bool');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'logicalAnd', 'bool');
     util_1.assert($a.dtype === 'bool' && $b.dtype === 'bool', 'Error Array must be of type bool.');
     broadcast_util_1.assertAndGetBroadcastShape($a.shape, $b.shape);
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.logicalAnd($a, $b); }, { $a: $a, $b: $b });
 }
 function logicalOr_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'logicalOr', 'bool');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'logicalOr', 'bool');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'logicalOr', 'bool');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'logicalOr', 'bool');
     util_1.assert($a.dtype === 'bool' && $b.dtype === 'bool', 'Error Array must be of type bool.');
     broadcast_util_1.assertAndGetBroadcastShape($a.shape, $b.shape);
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.logicalOr($a, $b); }, { $a: $a, $b: $b });
 }
 function logicalXor_(a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'logicalXor', 'bool');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'logicalXor', 'bool');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'logicalXor', 'bool');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'logicalXor', 'bool');
     util_1.assert($a.dtype === 'bool' && $b.dtype === 'bool', 'Error Array must be of type bool.');
     broadcast_util_1.assertAndGetBroadcastShape($a.shape, $b.shape);
     return exports.logicalOr(a, b).logicalAnd(exports.logicalAnd(a, b).logicalNot());
 }
 function where_(condition, a, b) {
-    var $a = tensor_util_env_1.convertToTensor(a, 'a', 'where');
-    var $b = tensor_util_env_1.convertToTensor(b, 'b', 'where');
-    var $condition = tensor_util_env_1.convertToTensor(condition, 'condition', 'where', 'bool');
+    var $a = tensor_util_1.convertToTensor(a, 'a', 'where');
+    var $b = tensor_util_1.convertToTensor(b, 'b', 'where');
+    var $condition = tensor_util_1.convertToTensor(condition, 'condition', 'where', 'bool');
     util_1.assert($condition.dtype === 'bool', 'Error Condition must be of type bool.');
     util_1.assertShapesMatch($a.shape, $b.shape, 'Error in where: ');
     if ($condition.rank === 1) {
@@ -93,7 +93,7 @@ function whereAsync_(condition) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    $condition = tensor_util_env_1.convertToTensor(condition, 'condition', 'where', 'bool');
+                    $condition = tensor_util_1.convertToTensor(condition, 'condition', 'where', 'bool');
                     util_1.assert($condition.dtype === 'bool', 'Condition must be of type bool.');
                     return [4, $condition.data()];
                 case 1:

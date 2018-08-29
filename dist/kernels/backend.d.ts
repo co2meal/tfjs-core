@@ -19,15 +19,13 @@ export interface BackendTimer {
     time(f: () => void): Promise<BackendTimingInfo>;
 }
 export interface KernelBackend extends TensorStorage, BackendTimer {
-    floatPrecision(): number;
     matMul(a: Tensor2D, b: Tensor2D, transposeA: boolean, transposeB: boolean): Tensor2D;
     slice<T extends Tensor>(x: T, begin: number[], size: number[]): T;
-    stridedSlice<T extends Tensor>(x: T, begin: number[], end: number[], strides: number[], beginMask: number, endMask: number, ellipsisMask: number, newAxisMask: number, shrinkAxisMask: number): T;
+    stridedSlice<T extends Tensor>(x: T, begin: number[], end: number[], strides: number[], beginMask: number, endMask: number): T;
     reverse<T extends Tensor>(a: T, axis: number[]): T;
     concat(a: Tensor2D, b: Tensor2D): Tensor2D;
     neg<T extends Tensor>(a: T): T;
     add(a: Tensor, b: Tensor): Tensor;
-    addN<T extends Tensor>(tensors: T[]): T;
     subtract(a: Tensor, b: Tensor): Tensor;
     multiply(a: Tensor, b: Tensor): Tensor;
     realDivide(a: Tensor, b: Tensor): Tensor;

@@ -174,9 +174,6 @@ function loadWeights(manifest, filePathPrefix, weightNames, requestOptions) {
                                 else if (dtype === 'int32') {
                                     typedArray = new Int32Array(byteBuffer);
                                 }
-                                else if (dtype === 'bool') {
-                                    typedArray = new Uint8Array(byteBuffer);
-                                }
                                 else {
                                     throw new Error("Weight " + weightsEntry.manifestEntry.name + " has unknown dtype " +
                                         (dtype + "."));

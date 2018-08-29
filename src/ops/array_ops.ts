@@ -14,19 +14,19 @@
  * limitations under the License.
  * =============================================================================
  */
-import {ENV} from '../environment';
+import { ENV } from '../environment';
 // tslint:disable-next-line:max-line-length
-import {Tensor, Tensor1D, Tensor2D, Tensor3D, Tensor4D, TensorBuffer} from '../tensor';
-import {convertToTensor, convertToTensorArray} from '../tensor_util';
+import { Tensor, Tensor1D, Tensor2D, Tensor3D, Tensor4D, TensorBuffer } from '../tensor';
+import { convertToTensor, convertToTensorArray } from '../tensor_util';
 // tslint:disable-next-line:max-line-length
-import {DataType, Rank, ShapeMap, TensorLike, TensorLike1D, TypedArray} from '../types';
+import { DataType, Rank, ShapeMap, TensorLike, TensorLike1D, TypedArray } from '../types';
 import * as util from '../util';
 // tslint:disable-next-line:max-line-length
-import {getAxesPermutation, getInnerMostAxes, parseAxisParam} from './axis_util';
-import {concat} from './concat';
-import {op} from './operation';
-import {MPRandGauss} from './rand';
-import {zerosLike} from './tensor_ops';
+import { getAxesPermutation, getInnerMostAxes, parseAxisParam } from './axis_util';
+import { concat } from './concat';
+import { op } from './operation';
+import { MPRandGauss } from './rand';
+import { zerosLike } from './tensor_ops';
 
 /**
  * Creates a new tensor with the same values and shape as the specified
@@ -41,16 +41,16 @@ import {zerosLike} from './tensor_ops';
  * @param x The tensor to clone.
  */
 /** @doc {heading: 'Tensors', subheading: 'Creation'} */
-function clone_<T extends Tensor>(x: T|TensorLike): T {
+function clone_<T extends Tensor>(x: T | TensorLike): T {
   const $x = convertToTensor(x, 'x', 'clone');
   const der = (dy: T) => {
-    return {$x: () => dy.toFloat()};
+    return { $x: () => dy.toFloat() };
   };
 
   return ENV.engine.runKernel(
-             backend =>
-                 Tensor.make($x.shape, {dataId: $x.dataId}, $x.dtype) as T,
-             {$x}, der) as T;
+    backend =>
+      Tensor.make($x.shape, { dataId: $x.dataId }, $x.dtype) as T,
+    { $x }, der) as T;
 }
 
 /**
@@ -67,13 +67,13 @@ function clone_<T extends Tensor>(x: T|TensorLike): T {
  */
 /** @doc {heading: 'Tensors', subheading: 'Creation'} */
 function eye_(
-    numRows: number, numColumns?: number,
-    batchShape?:
-        [
-          number
-        ]|[number,
-           number]|[number, number, number]|[number, number, number, number],
-    dtype: DataType = 'float32'): Tensor2D {
+  numRows: number, numColumns?: number,
+  batchShape?:
+    [
+      number
+    ] | [number,
+      number] | [number, number, number] | [number, number, number, number],
+  dtype: DataType = 'float32'): Tensor2D {
   if (numColumns == null) {
     numColumns = numRows;
   }
@@ -90,17 +90,17 @@ function eye_(
       return tile(expandDims(out, 0), [batchShape[0], 1, 1]);
     } else if (batchShape.length === 2) {
       return tile(
-          expandDims(expandDims(out, 0), 0),
-          [batchShape[0], batchShape[1], 1, 1]);
+        expandDims(expandDims(out, 0), 0),
+        [batchShape[0], batchShape[1], 1, 1]);
     } else if (batchShape.length === 3) {
       return tile(
-          expandDims(expandDims(expandDims(out, 0), 0), 0),
-          [batchShape[0], batchShape[1], batchShape[2], 1, 1]);
+        expandDims(expandDims(expandDims(out, 0), 0), 0),
+        [batchShape[0], batchShape[1], batchShape[2], 1, 1]);
     } else {
       throw new Error(
-          `eye() currently supports only 1D and 2D ` +
-          // tslint:disable-next-line:no-any
-          `batchShapes, but received ${(batchShape as any).length}D.`);
+        `eye() currently supports only 1D and 2D ` +
+        // tslint:disable-next-line:no-any
+        `batchShapes, but received ${(batchShape as any).length}D.`);
     }
   }
 }
@@ -120,13 +120,13 @@ function eye_(
  */
 /** @doc {heading: 'Tensors', subheading: 'Random'} */
 function randomNormal_<R extends Rank>(
-    shape: ShapeMap[R], mean = 0, stdDev = 1, dtype?: 'float32'|'int32',
-    seed?: number): Tensor<R> {
+  shape: ShapeMap[R], mean = 0, stdDev = 1, dtype?: 'float32' | 'int32',
+  seed?: number): Tensor<R> {
   if (dtype != null && (dtype as DataType) === 'bool') {
     throw new Error(`Unsupported data type ${dtype}`);
   }
   const randGauss =
-      new MPRandGauss(mean, stdDev, dtype, false /* truncated */, seed);
+    new MPRandGauss(mean, stdDev, dtype, false /* truncated */, seed);
   const res = buffer(shape, dtype);
   for (let i = 0; i < res.values.length; i++) {
     res.values[i] = randGauss.nextValue();
@@ -154,13 +154,13 @@ function randomNormal_<R extends Rank>(
  */
 /** @doc {heading: 'Tensors', subheading: 'Creation'} */
 function truncatedNormal_<R extends Rank>(
-    shape: ShapeMap[R], mean = 0, stdDev = 1, dtype?: 'float32'|'int32',
-    seed?: number): Tensor<R> {
+  shape: ShapeMap[R], mean = 0, stdDev = 1, dtype?: 'float32' | 'int32',
+  seed?: number): Tensor<R> {
   if (dtype != null && (dtype as DataType) === 'bool') {
     throw new Error(`Unsupported data type ${dtype}`);
   }
   const randGauss =
-      new MPRandGauss(mean, stdDev, dtype, true /* truncated */, seed);
+    new MPRandGauss(mean, stdDev, dtype, true /* truncated */, seed);
   const res = buffer(shape, dtype);
   for (let i = 0; i < res.values.length; i++) {
     res.values[i] = randGauss.nextValue();
@@ -188,8 +188,8 @@ function truncatedNormal_<R extends Rank>(
  */
 /** @doc {heading: 'Tensors', subheading: 'Random'} */
 function randomUniform_<R extends Rank>(
-    shape: ShapeMap[R], minval = 0, maxval = 1,
-    dtype: DataType = 'float32'): Tensor<R> {
+  shape: ShapeMap[R], minval = 0, maxval = 1,
+  dtype: DataType = 'float32'): Tensor<R> {
   const res = buffer(shape, dtype);
   for (let i = 0; i < res.values.length; i++) {
     res.values[i] = util.randUniform(minval, maxval);
@@ -207,8 +207,8 @@ function randomUniform_<R extends Rank>(
  * @param dtype The data type of the output tensor. Defaults to 'float32'.
  */
 function rand_<R extends Rank>(
-    shape: ShapeMap[R], randFunction: () => number,
-    dtype?: DataType): Tensor<R> {
+  shape: ShapeMap[R], randFunction: () => number,
+  dtype?: DataType): Tensor<R> {
   const size = util.sizeFromShape(shape);
 
   let values = null;
@@ -225,7 +225,7 @@ function rand_<R extends Rank>(
   for (let i = 0; i < size; i++) {
     values[i] = randFunction();
   }
-  return Tensor.make(shape, {values}, dtype);
+  return Tensor.make(shape, { values }, dtype);
 }
 
 /**
@@ -248,15 +248,15 @@ function rand_<R extends Rank>(
  */
 /** @doc {heading: 'Tensors', subheading: 'Random'} */
 function multinomial_(
-    logits: Tensor1D|Tensor2D|TensorLike, numSamples: number, seed?: number,
-    normalized = false): Tensor1D|Tensor2D {
+  logits: Tensor1D | Tensor2D | TensorLike, numSamples: number, seed?: number,
+  normalized = false): Tensor1D | Tensor2D {
   const $logits = convertToTensor(logits, 'logits', 'multinomial');
   const numOutcomes = $logits.size;
   const origRank = $logits.rank;
   if (numOutcomes < 2) {
     throw new Error(
-        `Error in multinomial: you need at least 2 outcomes, but got ` +
-        `${numOutcomes}.`);
+      `Error in multinomial: you need at least 2 outcomes, but got ` +
+      `${numOutcomes}.`);
   }
   if (origRank > 2) {
     throw new Error(`Rank of probabilities must be 1 or 2, but is ${origRank}`);
@@ -264,8 +264,8 @@ function multinomial_(
   seed = seed || Math.random();
   const logits2D = origRank === 1 ? $logits.as2D(1, -1) : $logits as Tensor2D;
   const res = ENV.engine.runKernel(
-      backend => backend.multinomial(logits2D, normalized, numSamples, seed),
-      {logits2D});
+    backend => backend.multinomial(logits2D, normalized, numSamples, seed),
+    { logits2D });
 
   return origRank === 1 ? res.as1D() : res;
 }
@@ -288,8 +288,8 @@ function multinomial_(
  */
 /** @doc {heading: 'Tensors', subheading: 'Creation'} */
 function oneHot_(
-    indices: Tensor1D|TensorLike1D, depth: number, onValue = 1,
-    offValue = 0): Tensor2D {
+  indices: Tensor1D | TensorLike1D, depth: number, onValue = 1,
+  offValue = 0): Tensor2D {
   const $indices = convertToTensor(indices, 'indices', 'oneHot', 'int32');
   util.assert($indices.dtype === 'int32', 'Indices must be of dtype `int32`');
 
@@ -297,8 +297,8 @@ function oneHot_(
     throw new Error(`Error in oneHot: depth must be >=2, but it is ${depth}`);
   }
   return ENV.engine.runKernel(
-      backend => backend.oneHot($indices, depth, onValue, offValue),
-      {$indices});
+    backend => backend.oneHot($indices, depth, onValue, offValue),
+    { $indices });
 }
 
 /**
@@ -322,11 +322,11 @@ function oneHot_(
  */
 /** @doc {heading: 'Tensors', subheading: 'Creation'} */
 function fromPixels_(
-    pixels: ImageData|HTMLImageElement|HTMLCanvasElement|HTMLVideoElement,
-    numChannels = 3): Tensor3D {
+  pixels: ImageData | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
+  numChannels = 3): Tensor3D {
   if (numChannels > 4) {
     throw new Error(
-        'Cannot construct Tensor with more than 4 channels from pixels.');
+      'Cannot construct Tensor with more than 4 channels from pixels.');
   }
   return ENV.engine.fromPixels(pixels, numChannels);
 }
@@ -350,20 +350,20 @@ function fromPixels_(
  */
 /** @doc {heading: 'Visualization'} */
 async function toPixels(
-    img: Tensor2D|Tensor3D|TensorLike,
-    canvas?: HTMLCanvasElement): Promise<Uint8ClampedArray> {
+  img: Tensor2D | Tensor3D | TensorLike,
+  canvas?: HTMLCanvasElement): Promise<Uint8ClampedArray> {
   const $img = convertToTensor(img, 'img', 'toPixels', 'int32');
   if ($img.rank !== 2 && $img.rank !== 3) {
     throw new Error(
-        `toPixels only supports rank 2 or 3 tensors, got rank ${$img.rank}.`);
+      `toPixels only supports rank 2 or 3 tensors, got rank ${$img.rank}.`);
   }
   const [height, width] = $img.shape.slice(0, 2);
   const depth = $img.rank === 2 ? 1 : $img.shape[2];
 
   if (depth > 4 || depth === 2) {
     throw new Error(
-        `toPixels only supports depth of size ` +
-        `1, 3 or 4 but got ${depth}`);
+      `toPixels only supports depth of size ` +
+      `1, 3 or 4 but got ${depth}`);
   }
 
   const minTensor = $img.min();
@@ -375,19 +375,19 @@ async function toPixels(
   if ($img.dtype === 'float32') {
     if (min < 0 || max > 1) {
       throw new Error(
-          `Tensor values for a float32 Tensor must be in the ` +
-          `range [0 - 1] but got range [${min} - ${max}].`);
+        `Tensor values for a float32 Tensor must be in the ` +
+        `range [0 - 1] but got range [${min} - ${max}].`);
     }
   } else if ($img.dtype === 'int32') {
     if (min < 0 || max > 255) {
       throw new Error(
-          `Tensor values for a int32 Tensor must be in the ` +
-          `range [0 - 255] but got range [${min} - ${max}].`);
+        `Tensor values for a int32 Tensor must be in the ` +
+        `range [0 - 255] but got range [${min} - ${max}].`);
     }
   } else {
     throw new Error(
-        `Unsupported type for toPixels: ${$img.dtype}.` +
-        ` Please use float32 or int32 tensors.`);
+      `Unsupported type for toPixels: ${$img.dtype}.` +
+      ` Please use float32 or int32 tensors.`);
   }
 
   const data = await $img.data();
@@ -459,18 +459,18 @@ async function toPixels(
  */
 /** @doc {heading: 'Tensors', subheading: 'Transformations'} */
 function reshape_<R2 extends Rank>(
-    x: Tensor|TensorLike, shape: ShapeMap[R2]): Tensor<R2> {
+  x: Tensor | TensorLike, shape: ShapeMap[R2]): Tensor<R2> {
   const $x = convertToTensor(x, 'x', 'reshape');
   shape = util.inferFromImplicitShape(shape, $x.size);
   util.assert(
-      $x.size === util.sizeFromShape(shape),
-      'new shape and old shape must have the same number of elements.');
+    $x.size === util.sizeFromShape(shape),
+    'new shape and old shape must have the same number of elements.');
 
   const grad = (dy: Tensor<R2>) => {
-    return {$x: () => dy.reshape($x.shape)};
+    return { $x: () => dy.reshape($x.shape) };
   };
   return ENV.engine.runKernel(
-      backend => backend.reshape($x, shape), {$x}, grad);
+    backend => backend.reshape($x, shape), { $x }, grad);
 }
 
 /**
@@ -487,7 +487,7 @@ function reshape_<R2 extends Rank>(
  * is an error to squeeze a dimension that is not 1.
  */
 /** @doc {heading: 'Tensors', subheading: 'Transformations'} */
-function squeeze_<T extends Tensor>(x: Tensor|TensorLike, axis?: number[]): T {
+function squeeze_<T extends Tensor>(x: Tensor | TensorLike, axis?: number[]): T {
   const $x = convertToTensor(x, 'x', 'squeeze');
   return reshape($x, util.squeezeShape($x.shape, axis).newShape) as T;
 }
@@ -503,14 +503,14 @@ function squeeze_<T extends Tensor>(x: Tensor|TensorLike, axis?: number[]): T {
  * @param dtype The dtype to cast the input tensor to.
  */
 /** @doc {heading: 'Tensors', subheading: 'Transformations'} */
-function cast_<T extends Tensor>(x: T|TensorLike, dtype: DataType): T {
+function cast_<T extends Tensor>(x: T | TensorLike, dtype: DataType): T {
   const $x = convertToTensor(x, 'x', 'cast');
 
   const grad = (dy: T) => {
-    return {$x: () => dy.clone()};
+    return { $x: () => dy.clone() };
   };
-  return ENV.engine.runKernel(backend => backend.cast($x, dtype), {$x}, grad) as
-      T;
+  return ENV.engine.runKernel(backend => backend.cast($x, dtype), { $x }, grad) as
+    T;
 }
 
 /**
@@ -537,13 +537,13 @@ function cast_<T extends Tensor>(x: T|TensorLike, dtype: DataType): T {
  * @param reps Determines the number of replications per dimension.
  */
 /** @doc {heading: 'Tensors', subheading: 'Slicing and Joining'} */
-function tile_<T extends Tensor>(x: T|TensorLike, reps: number[]): T {
+function tile_<T extends Tensor>(x: T | TensorLike, reps: number[]): T {
   const $x = convertToTensor(x, 'x', 'tile');
 
   util.assert(
-      $x.rank === reps.length,
-      `Error in transpose: rank of input ${$x.rank} ` +
-          `must match length of reps ${reps}.`);
+    $x.rank === reps.length,
+    `Error in transpose: rank of input ${$x.rank} ` +
+    `must match length of reps ${reps}.`);
   const grad = (dy: T) => {
     const derX = () => {
       let xGrad = zerosLike($x);
@@ -557,8 +557,8 @@ function tile_<T extends Tensor>(x: T|TensorLike, reps: number[]): T {
         for (let i = 0; i < reps[0]; ++i) {
           for (let j = 0; j < reps[1]; ++j) {
             xGrad = xGrad.add(dy.slice(
-                [i * $x.shape[0], j * $x.shape[1]],
-                [$x.shape[0], $x.shape[1]]));
+              [i * $x.shape[0], j * $x.shape[1]],
+              [$x.shape[0], $x.shape[1]]));
           }
         }
       } else if ($x.rank === 3) {
@@ -566,8 +566,8 @@ function tile_<T extends Tensor>(x: T|TensorLike, reps: number[]): T {
           for (let j = 0; j < reps[1]; ++j) {
             for (let k = 0; k < reps[2]; ++k) {
               xGrad = xGrad.add(dy.slice(
-                  [i * $x.shape[0], j * $x.shape[1], k * $x.shape[2]],
-                  [$x.shape[0], $x.shape[1], $x.shape[2]]));
+                [i * $x.shape[0], j * $x.shape[1], k * $x.shape[2]],
+                [$x.shape[0], $x.shape[1], $x.shape[2]]));
             }
           }
         }
@@ -577,36 +577,36 @@ function tile_<T extends Tensor>(x: T|TensorLike, reps: number[]): T {
             for (let k = 0; k < reps[2]; ++k) {
               for (let l = 0; l < reps[3]; ++l) {
                 xGrad = xGrad.add(dy.slice(
-                    [
-                      i * $x.shape[0], j * $x.shape[1], k * $x.shape[2],
-                      l * $x.shape[3]
-                    ],
-                    [$x.shape[0], $x.shape[1], $x.shape[2], $x.shape[3]]));
+                  [
+                    i * $x.shape[0], j * $x.shape[1], k * $x.shape[2],
+                    l * $x.shape[3]
+                  ],
+                  [$x.shape[0], $x.shape[1], $x.shape[2], $x.shape[3]]));
               }
             }
           }
         }
       } else {
         throw new Error(
-            `Gradient for tile operation is not implemented for rank-` +
-            `${$x.rank} tensors yet.`);
+          `Gradient for tile operation is not implemented for rank-` +
+          `${$x.rank} tensors yet.`);
       }
       return xGrad;
     };
-    return {$x: derX};
+    return { $x: derX };
   };
-  return ENV.engine.runKernel(backend => backend.tile($x, reps), {$x}, grad);
+  return ENV.engine.runKernel(backend => backend.tile($x, reps), { $x }, grad);
 }
 
 /**
  * Pads a `Tensor1D` with a given value and paddings. See `pad` for details.
  */
 function pad1d_(
-    x: Tensor1D|TensorLike, paddings: [number, number],
-    constantValue = 0): Tensor1D {
+  x: Tensor1D | TensorLike, paddings: [number, number],
+  constantValue = 0): Tensor1D {
   util.assert(
-      paddings.length === 2,
-      'Invalid number of paddings. Must be length of 2.');
+    paddings.length === 2,
+    'Invalid number of paddings. Must be length of 2.');
   return pad(x, [paddings], constantValue);
 }
 
@@ -614,12 +614,12 @@ function pad1d_(
  * Pads a `Tensor2D` with a given value and paddings. See `pad` for details.
  */
 function pad2d_(
-    x: Tensor2D|TensorLike, paddings: [[number, number], [number, number]],
-    constantValue = 0): Tensor2D {
+  x: Tensor2D | TensorLike, paddings: [[number, number], [number, number]],
+  constantValue = 0): Tensor2D {
   util.assert(
-      paddings.length === 2 && paddings[0].length === 2 &&
-          paddings[1].length === 2,
-      'Invalid number of paddings. Must be length of 2 each.');
+    paddings.length === 2 && paddings[0].length === 2 &&
+    paddings[1].length === 2,
+    'Invalid number of paddings. Must be length of 2 each.');
   return pad(x, paddings, constantValue);
 }
 
@@ -627,13 +627,13 @@ function pad2d_(
  * Pads a `Tensor3D` with a given value and paddings. See `pad` for details.
  */
 function pad3d_(
-    x: Tensor3D|TensorLike,
-    paddings: [[number, number], [number, number], [number, number]],
-    constantValue = 0): Tensor3D {
+  x: Tensor3D | TensorLike,
+  paddings: [[number, number], [number, number], [number, number]],
+  constantValue = 0): Tensor3D {
   util.assert(
-      paddings.length === 3 && paddings[0].length === 2 &&
-          paddings[1].length === 2 && paddings[2].length === 2,
-      'Invalid number of paddings. Must be length of 2 each.');
+    paddings.length === 3 && paddings[0].length === 2 &&
+    paddings[1].length === 2 && paddings[2].length === 2,
+    'Invalid number of paddings. Must be length of 2 each.');
   return pad(x, paddings, constantValue);
 }
 
@@ -641,18 +641,18 @@ function pad3d_(
  * Pads a `Tensor4D` with a given value and paddings. See `pad` for details.
  */
 function pad4d_(
-    x: Tensor4D|TensorLike,
-    paddings:
-        [
-          [number, number], [number, number], [number, number],
-          [number, number]
-        ],
-    constantValue = 0): Tensor4D {
+  x: Tensor4D | TensorLike,
+  paddings:
+    [
+      [number, number], [number, number], [number, number],
+      [number, number]
+    ],
+  constantValue = 0): Tensor4D {
   util.assert(
-      paddings.length === 4 && paddings[0].length === 2 &&
-          paddings[1].length === 2 && paddings[2].length === 2 &&
-          paddings[3].length === 2,
-      'Invalid number of paddings. Must be length of 2 each.');
+    paddings.length === 4 && paddings[0].length === 2 &&
+    paddings[1].length === 2 && paddings[2].length === 2 &&
+    paddings[3].length === 2,
+    'Invalid number of paddings. Must be length of 2 each.');
   return pad(x, paddings, constantValue);
 }
 
@@ -680,7 +680,7 @@ function pad4d_(
  */
 /** @doc {heading: 'Tensors', subheading: 'Transformations'} */
 function pad_<T extends Tensor>(
-    x: T|TensorLike, paddings: Array<[number, number]>, constantValue = 0): T {
+  x: T | TensorLike, paddings: Array<[number, number]>, constantValue = 0): T {
   const $x = convertToTensor(x, 'x', 'pad');
 
   if ($x.rank === 0) {
@@ -690,11 +690,11 @@ function pad_<T extends Tensor>(
   // slices the original shape out of the gradient.
   const begin = paddings.map(p => p[0]);
   const grad = (dy: T) => {
-    return {$x: () => dy.slice(begin, $x.shape)};
+    return { $x: () => dy.slice(begin, $x.shape) };
   };
   return ENV.engine.runKernel(
-             backend => backend.pad($x, paddings, constantValue), {$x}, grad) as
-      T;
+    backend => backend.pad($x, paddings, constantValue), { $x }, grad) as
+    T;
 }
 
 /**
@@ -711,7 +711,7 @@ function pad_<T extends Tensor>(
  * @param axis The axis to stack along. Defaults to 0 (the first dim).
  */
 /** @doc {heading: 'Tensors', subheading: 'Slicing and Joining'} */
-function stack_<T extends Tensor>(tensors: T[]|TensorLike[], axis = 0): Tensor {
+function stack_<T extends Tensor>(tensors: T[] | TensorLike[], axis = 0): Tensor {
   const $tensors = convertToTensorArray(tensors, 'tensors', 'stack');
 
   util.assert($tensors.length >= 1, 'Pass at least one tensor to tf.stack');
@@ -726,14 +726,14 @@ function stack_<T extends Tensor>(tensors: T[]|TensorLike[], axis = 0): Tensor {
 
   $tensors.forEach(t => {
     util.assertShapesMatch(
-        shape, t.shape,
-        'All tensors passed to stack must have matching shapes');
+      shape, t.shape,
+      'All tensors passed to stack must have matching shapes');
   });
 
   $tensors.forEach(t => {
     util.assert(
-        dtype === t.dtype,
-        'All tensors passed to stack must have matching dtypes');
+      dtype === t.dtype,
+      'All tensors passed to stack must have matching dtypes');
   });
   const expandedTensors = $tensors.map(t => t.expandDims(axis));
   return concat(expandedTensors, axis);
@@ -788,23 +788,23 @@ function stack_<T extends Tensor>(tensors: T[]|TensorLike[], axis = 0): Tensor {
  */
 /** @doc {heading: 'Tensors', subheading: 'Transformations'} */
 function batchToSpaceND_<T extends Tensor>(
-    x: T|TensorLike, blockShape: number[], crops: number[][]): T {
+  x: T | TensorLike, blockShape: number[], crops: number[][]): T {
   const $x = convertToTensor(x, 'x', 'batchToSpaceND');
   const prod = blockShape.reduce((a, b) => a * b);
 
   util.assert(
-      $x.rank >= 1 + blockShape.length,
-      `input rank should be > than [blockShape] but got ${$x.rank}`);
+    $x.rank >= 1 + blockShape.length,
+    `input rank should be > than [blockShape] but got ${$x.rank}`);
 
   util.assert(
-      crops.length === blockShape.length,
-      `crops.shape[0] must be equal to [blockShape] but got ${crops.length}`);
+    crops.length === blockShape.length,
+    `crops.shape[0] must be equal to [blockShape] but got ${crops.length}`);
 
   util.assert(
-      $x.shape[0] % prod === 0,
-      `input tensor batch must be divisible by prod( blockShape )`);
+    $x.shape[0] % prod === 0,
+    `input tensor batch must be divisible by prod( blockShape )`);
   return ENV.engine.runKernel(
-      backend => backend.batchToSpaceND($x, blockShape, crops), {});
+    backend => backend.batchToSpaceND($x, blockShape, crops), {});
 }
 
 /**
@@ -857,26 +857,41 @@ function batchToSpaceND_<T extends Tensor>(
  */
 /** @doc {heading: 'Tensors', subheading: 'Transformations'} */
 function spaceToBatchND_<T extends Tensor>(
-    x: T|TensorLike, blockShape: number[], paddings: number[][]): T {
+  x: T | TensorLike, blockShape: number[], paddings: number[][]): T {
   const $x = convertToTensor(x, 'x', 'spaceToBatchND');
 
   util.assert(
-      $x.rank >= 1 + blockShape.length,
-      `input rank should be > than [blockShape] but got ${$x.rank}`);
+    $x.rank >= 1 + blockShape.length,
+    `input rank ${$x.rank} should be > than [blockShape] ${
+    blockShape.length}`);
 
   util.assert(
-      paddings.length === blockShape.length,
-      `paddings.shape[0] must be equal to [blockShape], got ${
-          paddings.length}`);
+    paddings.length === blockShape.length,
+    `paddings.shape[0] ${paddings.length} must be equal to [blockShape] ${
+    blockShape.length}`);
 
-  util.assert($x.shape.reduce((a, b, i) => {
-    if (i > 0 && i <= blockShape.length) {
-      return a && (b % blockShape[i - 1] === 0);
-    }
-    return a;
-  }, true), `input spatial dimensions must be divisible by blockShapes`);
+  util.assert(
+    $x.shape.reduce(
+      (a, b, i) => {
+        if (i > 0 && i <= blockShape.length) {
+          return a &&
+            ((b + paddings[i - 1][0] + paddings[i - 1][1]) %
+              blockShape[i - 1] ===
+              0);
+        }
+        return a;
+      },
+      true),
+    `input spatial dimensions ${$x.shape.slice(1)} with paddings ${
+    paddings.toString()} must be divisible by blockShapes ${
+    blockShape.toString()}`);
+
+  const grad = (dy: T) => {
+    return { $x: () => dy.batchToSpaceND(blockShape, paddings) };
+  };
+
   return ENV.engine.runKernel(
-      backend => backend.spaceToBatchND($x, blockShape, paddings), {});
+    backend => backend.spaceToBatchND($x, blockShape, paddings), {}, grad);
 }
 
 /**
@@ -892,7 +907,7 @@ function spaceToBatchND_<T extends Tensor>(
  * @param axis The axis to unstack along. Defaults to 0 (the first dim).
  */
 /** @doc {heading: 'Tensors', subheading: 'Slicing and Joining'} */
-function unstack_<T extends Tensor>(x: T|TensorLike, axis = 0): Tensor[] {
+function unstack_<T extends Tensor>(x: T | TensorLike, axis = 0): Tensor[] {
   const $x = convertToTensor(x, 'x', 'unstack');
   const num = $x.shape[axis];
   const outputShape: number[] = Array($x.rank - 1).fill(0);
@@ -950,20 +965,20 @@ function unstack_<T extends Tensor>(x: T|TensorLike, axis = 0): Tensor[] {
  */
 /** @doc {heading: 'Tensors', subheading: 'Slicing and Joining'} */
 function split_<T extends Tensor>(
-    x: T|TensorLike, numOrSizeSplits: number[]|number, axis = 0): T[] {
+  x: T | TensorLike, numOrSizeSplits: number[] | number, axis = 0): T[] {
   const $x = convertToTensor(x, 'x', 'split');
 
   axis = parseAxisParam(axis, $x.shape)[0];
   let splitSizes: number[];
   if (typeof (numOrSizeSplits) === 'number') {
     util.assert(
-        $x.shape[axis] % numOrSizeSplits === 0,
-        'Number of splits must evenly divide the axis.');
+      $x.shape[axis] % numOrSizeSplits === 0,
+      'Number of splits must evenly divide the axis.');
     splitSizes = Array(numOrSizeSplits).fill($x.shape[axis] / numOrSizeSplits);
   } else {
     util.assert(
-        $x.shape[axis] === numOrSizeSplits.reduce((a, b) => a + b),
-        'The sum of sizes must match the size of the axis dimension.');
+      $x.shape[axis] === numOrSizeSplits.reduce((a, b) => a + b),
+      'The sum of sizes must match the size of the axis dimension.');
     splitSizes = numOrSizeSplits;
   }
   const begin = Array($x.rank).fill(0);
@@ -999,7 +1014,7 @@ function split_<T extends Tensor>(
  */
 /** @doc {heading: 'Operations', subheading: 'Scan'} */
 function cumsum_<T extends Tensor>(
-    x: Tensor|TensorLike, axis = 0, exclusive = false, reverse = false): T {
+  x: Tensor | TensorLike, axis = 0, exclusive = false, reverse = false): T {
   const $x = convertToTensor(x, 'x', 'cumsum');
 
   axis = axis | 0;
@@ -1011,12 +1026,12 @@ function cumsum_<T extends Tensor>(
   const permutedAxis = getInnerMostAxes(1, $x.rank)[0];
 
   const grad = (dy: T) => {
-    return {permutedX: () => dy.cumsum(axis, exclusive, !reverse)};
+    return { permutedX: () => dy.cumsum(axis, exclusive, !reverse) };
   };
   let value = ENV.engine.runKernel(
-                  backend => backend.cumsum(
-                      permutedX, permutedAxis, exclusive, reverse),
-                  {permutedX}, grad) as T;
+    backend => backend.cumsum(
+      permutedX, permutedAxis, exclusive, reverse),
+    { permutedX }, grad) as T;
 
   if (permutation != null) {
     value = value.transpose(permutation);
@@ -1040,7 +1055,7 @@ function cumsum_<T extends Tensor>(
  */
 /** @doc {heading: 'Tensors', subheading: 'Transformations'} */
 function expandDims_<R2 extends Rank>(
-    x: Tensor|TensorLike, axis = 0): Tensor<R2> {
+  x: Tensor | TensorLike, axis = 0): Tensor<R2> {
   const $x = convertToTensor(x, 'x', 'expandDims');
 
   util.assert(axis <= $x.rank, 'Axis must be <= rank of the tensor');
@@ -1048,8 +1063,8 @@ function expandDims_<R2 extends Rank>(
   if (axis < 0) {
     // Negative value is counted from the tail of rank.
     util.assert(
-        -($x.rank + 1) <= axis,
-        `Axis must be in the interval [${- ($x.rank + 1)}, ${$x.rank}]`);
+      -($x.rank + 1) <= axis,
+      `Axis must be in the interval [${- ($x.rank + 1)}, ${$x.rank}]`);
     axis = $x.rank + axis + 1;
   }
   newShape.splice(axis, 0, 1);
@@ -1082,8 +1097,8 @@ function expandDims_<R2 extends Rank>(
  */
 /** @doc {heading: 'Tensors', subheading: 'Creation'} */
 function buffer<R extends Rank>(
-    shape: ShapeMap[R], dtype: DataType = 'float32',
-    values?: TypedArray): TensorBuffer<R> {
+  shape: ShapeMap[R], dtype: DataType = 'float32',
+  values?: TypedArray): TensorBuffer<R> {
   return new TensorBuffer<R>(shape, dtype, values);
 }
 
@@ -1109,28 +1124,28 @@ export {
   print      // Not wrapped in op() since no need to increase stack trace.
 };
 
-export const cast = op({cast_});
-export const clone = op({clone_});
-export const cumsum = op({cumsum_});
-export const expandDims = op({expandDims_});
-export const eye = op({eye_});
-export const fromPixels = op({fromPixels_});
-export const multinomial = op({multinomial_});
-export const oneHot = op({oneHot_});
-export const pad = op({pad_});
-export const pad1d = op({pad1d_});
-export const pad2d = op({pad2d_});
-export const pad3d = op({pad3d_});
-export const pad4d = op({pad4d_});
-export const rand = op({rand_});
-export const randomNormal = op({randomNormal_});
-export const randomUniform = op({randomUniform_});
-export const reshape = op({reshape_});
-export const split = op({split_});
-export const squeeze = op({squeeze_});
-export const stack = op({stack_});
-export const tile = op({tile_});
-export const truncatedNormal = op({truncatedNormal_});
-export const unstack = op({unstack_});
-export const batchToSpaceND = op({batchToSpaceND_});
-export const spaceToBatchND = op({spaceToBatchND_});
+export const cast = op({ cast_ });
+export const clone = op({ clone_ });
+export const cumsum = op({ cumsum_ });
+export const expandDims = op({ expandDims_ });
+export const eye = op({ eye_ });
+export const fromPixels = op({ fromPixels_ });
+export const multinomial = op({ multinomial_ });
+export const oneHot = op({ oneHot_ });
+export const pad = op({ pad_ });
+export const pad1d = op({ pad1d_ });
+export const pad2d = op({ pad2d_ });
+export const pad3d = op({ pad3d_ });
+export const pad4d = op({ pad4d_ });
+export const rand = op({ rand_ });
+export const randomNormal = op({ randomNormal_ });
+export const randomUniform = op({ randomUniform_ });
+export const reshape = op({ reshape_ });
+export const split = op({ split_ });
+export const squeeze = op({ squeeze_ });
+export const stack = op({ stack_ });
+export const tile = op({ tile_ });
+export const truncatedNormal = op({ truncatedNormal_ });
+export const unstack = op({ unstack_ });
+export const batchToSpaceND = op({ batchToSpaceND_ });
+export const spaceToBatchND = op({ spaceToBatchND_ });

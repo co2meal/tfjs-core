@@ -289,26 +289,6 @@ jasmine_util_1.describeWithFlags('matmul', test_util_1.ALL_ENVS, function () {
         expect(c.shape).toEqual([2, 2]);
         test_util_1.expectArraysClose(c, [0, 8, -3, 20]);
     });
-    it('a * b where a has zero in its shape', function () {
-        var a = tf.tensor2d([], [0, 3]);
-        var b = tf.tensor2d([1, 2, 3, 4, 5, 6], [3, 2]);
-        var c = tf.matMul(a, b);
-        expect(c.shape).toEqual([0, 2]);
-        expect(c.rank).toBe(2);
-        expect(c.size).toBe(0);
-        test_util_1.expectArraysClose(c, []);
-    });
-    it('(a * b) * c where a has zero in its shape, so a*b does also', function () {
-        var a = tf.tensor2d([], [0, 3]);
-        var b = tf.tensor2d([1, 2, 3, 4, 5, 6], [3, 2]);
-        var ab = tf.matMul(a, b);
-        expect(ab.shape).toEqual([0, 2]);
-        test_util_1.expectArraysClose(ab, []);
-        var c = tf.tensor2d([1, 2, 3, 4, 5, 6], [2, 3]);
-        var res = tf.matMul(ab, c);
-        expect(res.shape).toEqual([0, 3]);
-        test_util_1.expectArraysClose(res, []);
-    });
 });
 jasmine_util_1.describeWithFlags('matmul webgl-only', test_util_1.WEBGL_ENVS, function () {
     it('Matrix times vector, large matrix', function () {

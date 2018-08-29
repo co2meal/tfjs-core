@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var environment_1 = require("../environment");
 var tensor_1 = require("../tensor");
-var tensor_util_env_1 = require("../tensor_util_env");
+var tensor_util_1 = require("../tensor_util");
 var util = require("../util");
 var axis_util_1 = require("./axis_util");
 var concat_1 = require("./concat");
@@ -45,7 +45,7 @@ var operation_1 = require("./operation");
 var rand_1 = require("./rand");
 var tensor_ops_1 = require("./tensor_ops");
 function clone_(x) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'clone');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'clone');
     var der = function (dy) {
         return { $x: function () { return dy.toFloat(); } };
     };
@@ -141,7 +141,7 @@ function rand_(shape, randFunction, dtype) {
 }
 function multinomial_(logits, numSamples, seed, normalized) {
     if (normalized === void 0) { normalized = false; }
-    var $logits = tensor_util_env_1.convertToTensor(logits, 'logits', 'multinomial');
+    var $logits = tensor_util_1.convertToTensor(logits, 'logits', 'multinomial');
     var numOutcomes = $logits.size;
     var origRank = $logits.rank;
     if (numOutcomes < 2) {
@@ -159,7 +159,7 @@ function multinomial_(logits, numSamples, seed, normalized) {
 function oneHot_(indices, depth, onValue, offValue) {
     if (onValue === void 0) { onValue = 1; }
     if (offValue === void 0) { offValue = 0; }
-    var $indices = tensor_util_env_1.convertToTensor(indices, 'indices', 'oneHot', 'int32');
+    var $indices = tensor_util_1.convertToTensor(indices, 'indices', 'oneHot', 'int32');
     util.assert($indices.dtype === 'int32', 'Indices must be of dtype `int32`');
     if (depth < 2) {
         throw new Error("Error in oneHot: depth must be >=2, but it is " + depth);
@@ -179,7 +179,7 @@ function toPixels(img, canvas) {
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    $img = tensor_util_env_1.convertToTensor(img, 'img', 'toPixels', 'int32');
+                    $img = tensor_util_1.convertToTensor(img, 'img', 'toPixels', 'int32');
                     if ($img.rank !== 2 && $img.rank !== 3) {
                         throw new Error("toPixels only supports rank 2 or 3 tensors, got rank " + $img.rank + ".");
                     }
@@ -263,7 +263,7 @@ function toPixels(img, canvas) {
 }
 exports.toPixels = toPixels;
 function reshape_(x, shape) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'reshape');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'reshape');
     shape = util.inferFromImplicitShape(shape, $x.size);
     util.assert($x.size === util.sizeFromShape(shape), 'new shape and old shape must have the same number of elements.');
     var grad = function (dy) {
@@ -272,18 +272,18 @@ function reshape_(x, shape) {
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.reshape($x, shape); }, { $x: $x }, grad);
 }
 function squeeze_(x, axis) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'squeeze');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'squeeze');
     return exports.reshape($x, util.squeezeShape($x.shape, axis).newShape);
 }
 function cast_(x, dtype) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'cast');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'cast');
     var grad = function (dy) {
         return { $x: function () { return dy.clone(); } };
     };
     return environment_1.ENV.engine.runKernel(function (backend) { return backend.cast($x, dtype); }, { $x: $x }, grad);
 }
 function tile_(x, reps) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'tile');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'tile');
     util.assert($x.rank === reps.length, "Error in transpose: rank of input " + $x.rank + " " +
         ("must match length of reps " + reps + "."));
     var grad = function (dy) {
@@ -360,7 +360,7 @@ function pad4d_(x, paddings, constantValue) {
 }
 function pad_(x, paddings, constantValue) {
     if (constantValue === void 0) { constantValue = 0; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'pad');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'pad');
     if ($x.rank === 0) {
         throw new Error('pad(scalar) is not defined. Pass non-scalar to pad');
     }
@@ -372,7 +372,7 @@ function pad_(x, paddings, constantValue) {
 }
 function stack_(tensors, axis) {
     if (axis === void 0) { axis = 0; }
-    var $tensors = tensor_util_env_1.convertToTensorArray(tensors, 'tensors', 'stack');
+    var $tensors = tensor_util_1.convertToTensorArray(tensors, 'tensors', 'stack');
     util.assert($tensors.length >= 1, 'Pass at least one tensor to tf.stack');
     if ($tensors.length === 1) {
         return $tensors[0].expandDims(axis);
@@ -391,34 +391,34 @@ function stack_(tensors, axis) {
     return concat_1.concat(expandedTensors, axis);
 }
 function batchToSpaceND_(x, blockShape, crops) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'batchToSpaceND');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'batchToSpaceND');
     var prod = blockShape.reduce(function (a, b) { return a * b; });
     util.assert($x.rank >= 1 + blockShape.length, "input rank should be > than [blockShape] but got " + $x.rank);
     util.assert(crops.length === blockShape.length, "crops.shape[0] must be equal to [blockShape] but got " + crops.length);
     util.assert($x.shape[0] % prod === 0, "input tensor batch must be divisible by prod( blockShape )");
-    var grad = function (dy) {
-        return { $x: function () { return dy.spaceToBatchND(blockShape, crops); } };
-    };
-    return environment_1.ENV.engine.runKernel(function (backend) { return backend.batchToSpaceND($x, blockShape, crops); }, { $x: $x }, grad);
+    return environment_1.ENV.engine.runKernel(function (backend) { return backend.batchToSpaceND($x, blockShape, crops); }, {});
 }
 function spaceToBatchND_(x, blockShape, paddings) {
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'spaceToBatchND');
-    util.assert($x.rank >= 1 + blockShape.length, "input rank should be > than [blockShape] but got " + $x.rank);
-    util.assert(paddings.length === blockShape.length, "paddings.shape[0] must be equal to [blockShape], got " + paddings.length);
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'spaceToBatchND');
+    util.assert($x.rank >= 1 + blockShape.length, "input rank " + $x.rank + " should be > than [blockShape] " + blockShape.length);
+    util.assert(paddings.length === blockShape.length, "paddings.shape[0] " + paddings.length + " must be equal to [blockShape] " + blockShape.length);
     util.assert($x.shape.reduce(function (a, b, i) {
         if (i > 0 && i <= blockShape.length) {
-            return a && (b % blockShape[i - 1] === 0);
+            return a &&
+                ((b + paddings[i - 1][0] + paddings[i - 1][1]) %
+                    blockShape[i - 1] ===
+                    0);
         }
         return a;
-    }, true), "input spatial dimensions must be divisible by blockShapes");
+    }, true), "input spatial dimensions " + $x.shape.slice(1) + " with paddings " + paddings.toString() + " must be divisible by blockShapes " + blockShape.toString());
     var grad = function (dy) {
         return { $x: function () { return dy.batchToSpaceND(blockShape, paddings); } };
     };
-    return environment_1.ENV.engine.runKernel(function (backend) { return backend.spaceToBatchND($x, blockShape, paddings); }, { $x: $x }, grad);
+    return environment_1.ENV.engine.runKernel(function (backend) { return backend.spaceToBatchND($x, blockShape, paddings); }, {}, grad);
 }
 function unstack_(x, axis) {
     if (axis === void 0) { axis = 0; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'unstack');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'unstack');
     var num = $x.shape[axis];
     var outputShape = Array($x.rank - 1).fill(0);
     var outIndex = 0;
@@ -441,7 +441,7 @@ function unstack_(x, axis) {
 }
 function split_(x, numOrSizeSplits, axis) {
     if (axis === void 0) { axis = 0; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'split');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'split');
     axis = axis_util_1.parseAxisParam(axis, $x.shape)[0];
     var splitSizes;
     if (typeof (numOrSizeSplits) === 'number') {
@@ -465,7 +465,7 @@ function cumsum_(x, axis, exclusive, reverse) {
     if (axis === void 0) { axis = 0; }
     if (exclusive === void 0) { exclusive = false; }
     if (reverse === void 0) { reverse = false; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'cumsum');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'cumsum');
     axis = axis | 0;
     var permutation = axis_util_1.getAxesPermutation([axis], $x.rank);
     var permutedX = $x;
@@ -484,7 +484,7 @@ function cumsum_(x, axis, exclusive, reverse) {
 }
 function expandDims_(x, axis) {
     if (axis === void 0) { axis = 0; }
-    var $x = tensor_util_env_1.convertToTensor(x, 'x', 'expandDims');
+    var $x = tensor_util_1.convertToTensor(x, 'x', 'expandDims');
     util.assert(axis <= $x.rank, 'Axis must be <= rank of the tensor');
     var newShape = $x.shape.slice();
     if (axis < 0) {

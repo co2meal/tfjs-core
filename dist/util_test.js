@@ -86,6 +86,12 @@ describe('util.repeatedTry', function () {
             .catch(doneFn);
     });
 });
+describe('util.getQueryParams', function () {
+    it('basic', function () {
+        expect(util.getQueryParams('?a=1&b=hi&f=animal'))
+            .toEqual({ 'a': '1', 'b': 'hi', 'f': 'animal' });
+    });
+});
 describe('util.inferFromImplicitShape', function () {
     it('empty shape', function () {
         var result = util.inferFromImplicitShape([], 0);
@@ -154,24 +160,14 @@ describe('util.squeezeShape', function () {
         });
     });
 });
-describe('util.checkComputationForNaN', function () {
+describe('util.checkForNaN', function () {
     it('Float32Array has NaN', function () {
-        expect(function () { return util.checkComputationForNaN(new Float32Array([1, 2, 3, NaN, 4, 255]), 'float32', ''); })
+        expect(function () { return util.checkForNaN(new Float32Array([1, 2, 3, NaN, 4, 255]), 'float32', ''); })
             .toThrowError();
     });
     it('Float32Array no NaN', function () {
-        expect(function () { return util.checkComputationForNaN(new Float32Array([1, 2, 3, 4, -1, 255]), 'float32', ''); })
+        expect(function () { return util.checkForNaN(new Float32Array([1, 2, 3, 4, -1, 255]), 'float32', ''); })
             .not.toThrowError();
-    });
-});
-describe('util.checkConversionForNaN', function () {
-    it('Float32Array has NaN', function () {
-        expect(function () { return util.checkConversionForNaN(new Float32Array([1, 2, 3, NaN, 4, 255]), 'float32'); })
-            .not.toThrowError();
-    });
-    it('Int32Array has NaN', function () {
-        expect(function () { return util.checkConversionForNaN([1, 2, 3, 4, NaN], 'int32'); })
-            .toThrowError();
     });
 });
 describe('util.hasEncodingLoss', function () {
